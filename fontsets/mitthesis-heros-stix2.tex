@@ -1,7 +1,7 @@
 % From mitthesis package
 % Documentation: https://ctan.org/pkg/mitthesis
 
-\ProvidesFile{mitthesis-heros-stix2.tex}[2025/04/21 v1.06 Load TeX Gyre Heros (sans serif) text font with STIX Two Math font and Inconsolata monospaced font]
+\ProvidesFile{mitthesis-heros-stix2.tex}[2025/10/23 v1.08 Load TeX Gyre Heros (sans serif) text font with STIX Two Math font and Inconsolata monospaced font]
 
 %% TeX Gyre Heros (sans serif) text font with STIX Two Math font and Inconsolata monospaced font
 %
@@ -18,7 +18,7 @@
 \else
 	\ClassNoteNoLine{\ClassName}{TeX Gyre Heros (sans serif) text font with STIX2 math font and Inconsolata monospaced font}
 	%
-    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket},mathbf=sym]{unicode-math}
     % suppress warnings about lack of integration between mathtools and unicode-math
     % unicode-math loads the fontspec package
 
@@ -52,7 +52,7 @@
         RawFeature = {+ss01,+ss02}, % drop +ss03 (upright quotes), 2025/04/18
     ]             
     \setmathfont{STIXTwoMath-Regular}[% nice glyphs, but \mkern sometimes helpful
-    	Scale=0.95,%MatchUppercase,%MatchLowercase,
+    	Scale=MatchLowercase,%0.95,%MatchUppercase,%MatchLowercase,
 		% scaling is a matter of taste ... the x-heights of STIX2 are greater than for Heros...
     	Extension = .otf,
 %		BoldFont = *,% STIX Two Math has no bold face

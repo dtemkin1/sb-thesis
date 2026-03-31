@@ -1,7 +1,7 @@
 % From mitthesis package
 % Documentation: https://ctan.org/pkg/mitthesis
 
-\ProvidesFile{mitthesis-termes-stix2.tex}[2025/04/21 v1.07 Load TeX Gyre Termes text font with STIX2 math font, Heros sans serif font, and Inconsolata monospaced font]
+\ProvidesFile{mitthesis-termes-stix2.tex}[2025/09/23 v1.08 Load TeX Gyre Termes text font with STIX2 math font, Heros sans serif font, and Inconsolata monospaced font]
 
 %% TeX Gyre Termes text font and Heros sans serif font with STIX2 math font and Inconsolata monospaced font
 %
@@ -18,7 +18,7 @@
 \else
 	\ClassNoteNoLine{\ClassName}{Loading TeX Gyre Termes text font with STIX2 math font, Heros sans serif font, and Inconsolata monospaced font}
 	%
-    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket},mathbf=sym]{unicode-math}
     % suppress warnings about lack of integration between mathtools and unicode-math
     % unicode-math loads the fontspec package
 	%

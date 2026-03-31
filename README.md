@@ -1,17 +1,17 @@
   
   #mitthesis --- A LaTeX template for an MIT thesis#
 
-  v1.20 dated 2025/05/02
+  v1.22 dated 2026/01/31
 
   ####Overview####
   This class provides a LaTeX template to format an MIT thesis according to
-  the requirements of the Massachusetts Institute of Technology Libraries (as posted in 2024):
+  the requirements of the Massachusetts Institute of Technology Libraries (as posted in 2026):
   
   [https://libraries.mit.edu/distinctive-collections/thesis-specs/](https://libraries.mit.edu/distinctive-collections/thesis-specs/)
 
   This template is appropriate for MIT theses of all types.
   
-  This template works with either pdfLaTeX or unicode engines such as luaLaTeX. The bibliography can be prepared with either biblatex (default) or natbib/bibtex. The class is based on current LaTeX distributions, ideally 11/2022 or later, but compatible with distributions back to 2020 (for now). This template replaces the older version of mitthesis.cls, which was first composed in the 1980s.
+  This template works with either pdfLaTeX or unicode engines such as luaLaTeX. The bibliography can be prepared with either biblatex (default) or natbib/bibtex. The class is requires LaTeX distributions of TeX Live 2022 or later. This template replaces the older version of mitthesis.cls, which was first composed in the 1980s.
   
   With minor adjustments, this template can be adapted for use at other institutions (see the documentation for details).
 
@@ -27,22 +27,20 @@
               acknowledgments.tex   --  put your acknowledgments in this file
               biosketch.tex         --  put your biosketch in this file (optional)
               chapter1.tex          --  sample first chapter 
-              committee_members.tex --  sample thesis committee members page (optional)
               appendixa.tex         --  sample appendix with code listing
               appendixb.tex         --  sample appendix with multipage table
               mitthesis-sample.bib  --  a sample bibliography file with many examples
+              mitthesis-style.css   --  a css style file embedded when tagged pdf is in use
               mydesign.tex          --  an optional file to load packages for document design
               fontsets/             --  a subdirectory of input files that load optional fonts
           *
           mitthesis-doc/        --  documentation for usage and options
-          examples/font_samples/  
-                                --  sample theses in different fonts 
           examples/cover_page_samples/  
-                                --  sample theses for one or more authors and degrees
+                                --  sample theses for one or more authors and degrees (PDF/UA2 and WTPDF)
           examples/design_samples/  
-                                --  examples of modifying the typographic design
-          examples/font_samples_UA2_WTPDF/  
-                                --  sample theses in different fonts with PDF/UA2 and WTPDF validation
+                                --  examples of modifying the typographic design (PDF/UA2 and WTPDF)
+          examples/font_samples/  
+                                --  sample theses in different fonts (most are PDF/UA2 and WTPDF)
           
     
   ####Author####
@@ -59,9 +57,46 @@
  ---
  
  ####Change log####
+ v1.22 (31 January 2026)
+ - Extensive revision of mitthesis-style.css and related tagging for improved html appearance. 
+ - Some structures tagged with a user-defined namespace.
+ - Eliminate subfigure package. Add class-defined \\subfigure and \\subcaption.
+ - Caption package now loaded only optionally through separate "mydesign" files.
+ - Edit mydesign.tex to use recent sockets/plugs for styling caption labels. As shipped, caption labels are made bold.
+ - Include patches for caption package, when loaded, to prevent breakage of tagging.
+ - Add period after each previous degree as a semantic of-end-sentence; the nonsemantic â€œ\\linebreakâ€ doesn't translate to html.
+ - Ensure no comma after first author name of two in copyright authors string
+ - Fix \\setoperatorfont in the Lucida fontset
+ - Adjust width of longtable captions
+ - Limit \\mathversion{bold} in section headings to fontsets that actually have a bold \\mathversion. Related edits in mydesign files.
+ - Regenerate example files and edit documentation
+ - Test backward compatibility in pdftex and lualatex to TeX Live 2022.
+
+ v1.21 (2 November 2025)
+ - drop most compatibility code for distributions older than TeX Live 2022.
+ - automatically create committee members page if at least one \\Reader command is given
+ - add an optional third field to the \\Supervisor macro (necessary with committee members page)
+ - revise code allow multiple titles/departments for supervisors and others
+ - fix bug in abstract-supervisor block that led to infinite loop for three or more supervisors.
+ - fix bug in handling edge cases of M degrees from N departments, where M and N are not equal and M + N > 3 
+ - add Oxford comma to copyright authors list
+ - change new column type in App B to eliminate warning about duplicate d column definition
+ - rescaled math font (Stix2) in heros-stix2 fontset file    
+ - patch biblatex (in mitthesis.tex) to make the number field vanish if value is empty or missing
+ - attach css file to improve HTML rendering when tagpdf is in use
+ - add Strong tag to Title, Abstract Title, and â€œAbstractâ€ for better HTML rendering
+ - change abstract supervisor block to a tabular environment for better HTML spacing
+ - tagged table header-rows in Table 1.1
+ - in in Table 1.1, replaced \\\\\[-0.5em\] by \\vspace{0.5em} to avoid tagging an empty line
+ - drop two tagging patches, now that those issues are fixed in current latex release
+ - set unicode-math to \[mathbf=sym\], to get bold math from symbol font, not default text font, in unicode fontset files. Prevents the loss of bold math symbols in HTML conversion.
+ - regenerate all example pdfs, mainly as UA-2, A-4F, and WTPDF; drop separate UA-2 examples directory
+ - revise documentation, validated for UA-2, A-4F, WTPDF, and CSS
+ - extensive code editing to better match expl3 syntactical conventions
+ - eliminate local integer counters in favor of \\l\_tmpa\_int, etc.
 
  v1.20 (2 May 2025)
-  - add font sample files in PDF/UA2 format. These files validate with https://demo.verapdf.org/ (v1.28.1) including the PDF/UA2 + tagged PDF profile, and the WTPDF 1.0 accessibility and reuse profiles.
+ - add font sample files in PDF/UA2 format. These files validate with https://demo.verapdf.org/ (v1.28.1) including the PDF/UA2 + tagged PDF profile, and the WTPDF 1.0 accessibility and reuse profiles.
  - define a two-column nomenclature format (nomenclature\*), using multicol package; set \\@itempenalty=10000 in \\EntryHeading
  - changes to default article reference format; change citation format to omit space after commas (\[6,7\] not \[6, 7\]).
  - eliminate Nx and cx argument types in favor of Ne and ce (x-type arguments are now deprecated); change some hooks; various other changes to the class file code.
@@ -82,7 +117,7 @@
  - edit documentation
 
  v1.18 (17 January 2025)
- - remove “In:” from references to journal papers
+ - remove â€œIn:â€ from references to journal papers
  - edits to title and abstract macros to better accommodate tagged pdf
  - replace tabbing environment in titlepage signature block by tabular and adjust centering code
  - add additional tags to title and abstract page for better structure
@@ -204,7 +239,7 @@
  
  ####License####
 
- Copyright (c) 2025 John H. Lienhard
+ Copyright (c) 2026 John H. Lienhard
 
  Permission is hereby granted, free of charge, to any person obtaining a copy of this software and 
  associated documentation files (the "Software"), to deal in the Software without restriction, 

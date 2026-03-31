@@ -1,73 +1,35 @@
 % !TEX encoding = UTF-8 Unicode
 % !BIB TS-program = biber
 
-%% Don't modify the \DocumentMetadata command unless you know what it does. 
-%% If this command throws an "undefined" error, your latex installation is out of date: try commenting this command out.
 \DocumentMetadata 
 {
 	lang		= en-US,
 	pdfversion  = 1.7,
 	pdfstandard = a-2b,
-%	debug		= {xmp-export}, % if you want to check your metadata (xmpi file).
+    pdfversion  = 2.0,
+    pdfstandard = { ua-2, a-4f },
+    tagging		= on,
 }
 
 %%%%%%%%%  Documentclass and options  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[twoside, fontset=termes-stix2]{mitthesis}% fontset=libertinus, fontset=lmodern, fontset=lucida, 
-%						fontset=fira-newtxsf, fontset=newtx, fontset=newtx-sans-text,  
-%						fontset=heros-stix2,  fontset=stix2, fontset=termes-stix2, fontset=termes
-%
-% option [twoside]		gives facing-page behavior for printing; omitting twoside will eliminate even-numbered blank pages.
-%
-% option [lineno]	 	provides line numbers, as for editing
-%
-% option [fontset=xxx]  is a keyvalue which can be:
-%					 	for pdftex or lualatex engine:  defaultfonts, libertinus, lmodern, lucida
-%					 	for pdftex only: 				fira-newtxsf, newtx, newtx-sans-text
-%						for lualatex only:				heros-stix2, stix2, termes, termes-stix2
-%					 	if no key value is given, fonts default to CMR (pdftex) or LMR (unicode), i.e., "the LaTeX font".
-%					 	You can edit the fontset files or you can write your own, myfonts.tex, and do [fontset=myfonts].
-%						If you are using multiple languages, load the babel package in your fontset file, before the fonts.
-%
-% option [mydesign] 	loads packages for color, title and list formats, margins, or captions. 
-%	or [mydesign=file]	You can edit mydesign.tex to change defaults. Other design files can be loaded as
-%						key values, [mydesign=filename], where filename.tex should be in your working directory.
-%						Two example files are provided: mydesign_redsans_headings.tex and mydesign_libertinus_headings.
-%						See documentation for details and a description of the appropriate fontsets to use with each.
+\documentclass[fontset=termes-stix2]{mitthesis}
 
-%%%%%%%%  Packages used in sample chapters (not otherwise required) %%%%%%%
+%%%%%%%%%  Packages used  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Package for code listing in Appendix A.
-\usepackage{listings}%   documentation is here https://ctan.org/pkg/listings
-
-%% Set chemical formulas nicely
-\usepackage[version=4]{mhchem}%   documentation at https://ctan.org/pkg/mhchem
-
-%% Latin filler used in Chapter 1, with a test for package version date (https://ctan.org/pkg/lipsum)
-\usepackage{lipsum}
-\IfPackageAtLeastTF{lipsum}{2021/09/20}{\setlipsum{auto-lang=false}}{}
-
-%%%%%%%%%  Other optional packages used sample chapters  %%%%%%%%%%%%%%%%%%
+%% Package for code listing
+% \usepackage{listings}
 
 %% Table related packages  
-
-\usepackage{booktabs}% publication quality tables (https://ctan.org/pkg/booktabs)
-
-\usepackage{array}% Additional options for column formats (https://ctan.org/pkg/array)
-
-\usepackage{dcolumn}% For alignment of numbers on the decimal place (https://ctan.org/pkg/dcolumn) 
-  \newcolumntype{d}[1]{D{.}{.}{#1}}% use with dcolumn package. Note: dcolumns are set in math mode.
-  % syntax: d{x.y} where x is max number of digits before decimal and y is max number after.
-
-% Package for multipage table in Appendix B.
-\usepackage{longtable}% typeset multi-page tables (https://ctan.org/pkg/longtable)
-
-%\usepackage{tabularx}% adjustable-width columns in tabular (https://ctan.org/pkg/tabularx)
-
+\usepackage{booktabs}% publication quality tables
+\usepackage{array}% Additional options for column formats
+\usepackage{dcolumn}% For alignment of numbers on the decimal place 
+    \newcolumntype{d}[1]{D{.}{.}{#1}}
+\usepackage{longtable}
+    \setlength{\LTcapwidth}{\linewidth}
 
 %% Package for improved typography
-\usepackage{microtype}% typographic fine-tuning (https://ctan.org/pkg/microtype)
-
+\usepackage[nopatch=footnote]{microtype}
 
 %% Load this if using the two-column nomenclature format, \begin{nomenclature*}
 \usepackage{multicol}
@@ -75,17 +37,13 @@
 
 %%%%%%%%%  Graphics path (to figure files)  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% Can set graphicspath to point to specific directories containing figures (the current directory is searched automatically)
-%% For instance, to search a subdirectory of the current directory called "figures" and a parallel directory called "art", set:
-
-% \graphicspath{ {figures/} {../art/} }% For details see: https://latexref.xyz/dev/latex2e.html#g_t_005cgraphicspath
+\graphicspath{ {figures/} }% For details see: https://latexref.xyz/dev/latex2e.html#g_t_005cgraphicspath
 
 
-%%%%%%%%%  Representative set-up for biblatex  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%  Biblatex set-up  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-%% biblatex is very powerful, and you can customize most aspects the reference list and citations to suit your needs.
 %%   documentation is here: https://ctan.org/pkg/biblatex
-%%   cheat sheet is here:   https://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf
+%%   biblatex cheat sheet is here:   https://tug.ctan.org/info/biblatex-cheatsheet/biblatex-cheatsheet.pdf
 
 %% Numerical citations of references
 \usepackage[style=ext-numeric-comp,giveninits=true,maxbibnames=10,sorting=none,language=american]{biblatex}
@@ -107,32 +65,22 @@
 		}
       }{}
     }
+    %
 	\renewbibmacro*{volume+number+eid}{%
         \printtext[bold]{\printfield{volume}}%    bold volume (issue number) , eid
-        \printtext[parens]{\printfield{number}}%  
+%        \printtext[parens]{\printfield{number}}%  
+        \iffieldundef{number}
+          {} % do nothing
+          {\printtext[parens]{\printfield{number}}} % print number in parentheses
         \setunit{\bibeidpunct}%
         \printfield{eid}
     }
 
-
-
-%% IEEE style citations and references
-% \usepackage[style=ieee,maxbibnames=10,sorting=none]{biblatex}% style=ext-numeric-comp,articlein=false,giveninits=true
-%	 \DefineBibliographyStrings{english}{url= \textsc{url} ,  }% replaces the IEEE default "[Online]. Available" by "URL"
-
-%% author-year style citations and references 
-%% use \parencite, not \cite, when you want "(Author, year)"
-%% The sample files are not set up to include parentheses.
-% \usepackage[style=authoryear, maxbibnames=10]{biblatex} 
-
-
-\addbibresource{sources.bib}%% <== change to YOUR bib file <= CHANGE
+\addbibresource{sources.bib}
 
 
 %% to avoid split urls and stretched white space, you can make the bibliography ragged-right by uncommenting this:
 %\AddToHook{cmd/bibsetup/after}{\raggedright}
-
-%% To ensure citations are set, run Latex --> biblatex --> Latex again (unless you installation does this automatically)
 
 
 %%%%%%%%%%  Option for "double spacing" %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -145,8 +93,8 @@
 
 %% The setspace package provides a tool for changing line separation. Use these two commands here:
 %
-% \usepackage{setspace}%  documentation at https://ctan.org/pkg/setspace
-% \setstretch{1.1}% you can choose some other value for the stretch of space between lines
+\usepackage{setspace}%  documentation at https://ctan.org/pkg/setspace
+\setstretch{1.1}% you can choose some other value for the stretch of space between lines
 %
 %% Use one or more of the these commands *AFTER* the frontmatter
 %
@@ -166,7 +114,7 @@
 	pdfsubject={Using applied category theory to create a generalized framework for bus network redesigns that incorporates equitable factors},
 	% Change this to briefly state topic of your thesis 
 % 
-	pdfkeywords={Massachusetts Institute of Technology, MIT, bus networks, transportation operations, urban planning, category theory, Diego Temkin},
+	pdfkeywords={Massachusetts Institute of Technology, MIT, Diego Temkin, public transit planning, transportation network design, accessibility, applied category theory, mixed-integer linear programming},
 	% Add keywords that will help search engines and libraries to find your work.
 	% Includes the name[s] of the author[s] 
 	% (If you used \DocumentMetadata at line 14, you can just put "\CopyrightAuthor," for the names.)
@@ -194,31 +142,63 @@
 \DeclarePairedDelimiterXPP\erf[1]{\Erf\mkern1mu}(){}{#1}% increase to 2mu with stix2 font
 \DeclarePairedDelimiterXPP\erfc[1]{\Erfc\mkern1mu}(){}{#1}
 
+%%%%%%%%%%%% Content that you need to write follows! %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\includeonly{acknowledgments,intro,litreview,methods,results,conclusions,appendixa,appendixb}
+%   for usage of includeonly, see https://latexref.xyz/_005cinclude-_0026-_005cincludeonly.html
+
+% ACRONYMS
+
+% for list of acronyms
+\usepackage[nomain, acronym, toc, section=chapter, numberedsection=autolabel, nohypertypes={acronym}]{glossaries}
+
+\makeglossaries
+
+\newacronym{gtfs}{GTFS}{General Transit Feed Specification}
+\newacronym{od}{OD}{origin-destination}
+\newacronym{acs}{ACS}{American Community Survey}
+\newacronym{avl}{AVL}{Automatic Vehicle Location}
+\newacronym{afc}{AFC}{Automatic Fare Collection}
+\newacronym{mbta}{MBTA}{Massachusetts Bay Transit Authority}
+\newacronym{brt}{BRT}{bus rapid transit}
+\newacronym{sbrp}{SBRP}{School Bus Routing Problem}
+\newacronym{vrp}{VRP}{Vehicle Routing Problem}
+\newacronym{milp}{MILP}{Mixed-Integer Linear Program}
+\newacronym{bird}{BiRD}{Biobjective Routing Decomposition}
+\newacronym{bps}{BPS}{Boston Public Schools}
+\newacronym{stsp}{STSP}{School Time Selection Problem}
+\newacronym{gqap}{GQAP}{Generalized Quadratic Assignment Problem}
+\newacronym{ilp}{ILP}{integer linear programming}
+\newacronym{lp}{LP}{linear program}
+\newacronym{afi}{AFI}{Accessibility Fairness Index}
+\newacronym{ej}{EJ}{Environmental Justice}
+\newacronym{fta}{FTA}{Federal Transit Administration}
+\newacronym{mdpi}{MDPI}{Monotone Design Problem with Implementation}
+\newacronym{cdpi}{CDPI}{Co-Design Problems with Implementation}
+\newacronym{mcdp}{MCDP}{Monotone Co-Design Problem}
+\newacronym{av}{AV}{autonomous vehicle}
+\newacronym{osm}{OSM}{OpenStreetMap}
 
 %%%%%%%%%%%%%%  End preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{document}
-%%% edit the following commands to match your thesis %%%%%%%%%%
 
-\title{Reimagining Urban Bus Operations: Using Applied Category Theory to Create a Generalized Framework for Bus Network Redesigns that Incorporates Equitable Factors}
+\title{Reimagining Urban Bus Operations: Using Category Theory to Create a Generalizable Framework for Bus Network Redesigns Incorporating Equitable Factors}
 
 \Author{Diego Temkin}{Department of Urban Studies and Planning}
 \Degree{Bachelor of Science in Planning}{Department of Urban Studies and Planning}
 
-\Supervisor{Jim Aloisi}{Lecturer of Transportation Policy and Planning}
-\Acceptor{Justin Steil}{Associate Professor of Law and Urban Planning}{UG Committee Chair, Department of Urban Studies and Planning} % \\ \> Third title}
+\Supervisor{Jim Aloisi}{Lecturer of Transportation Policy and Planning}[Department of Urban Studies and Planning]
+\Acceptor{Justin Steil}{Associate Professor of Law and Urban Planning}{Department of Urban Studies and Planning, UG Committee Chair} % \\ \> Third title}
 
 \DegreeDate{May}{2026}
-\ThesisDate{May 8, 2026}
+\ThesisDate{April 27, 2026}
 
+\Reader{Riccardo Fiorista}{Ph.D. Student, JTL-Transit Lab and Zardini Group}{Department of Civil and Environmental Engineering}
 
-%%%%%%  Choose whether to have a CREATIVE COMMONS License  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%
-% If you are using a cc license, uncomment the following line and insert details of your cc license here.
-%
 \CClicense{CC BY-NC-ND 4.0}{https://creativecommons.org/licenses/by-nc-nd/4.0/}
-%
+
 
 %%%%%%%  Solutions for overflowing titlepage  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -238,7 +218,7 @@
 %
 % (d) you can change the font size of the author name[s] with
 %
-%	\AuthorNameSize{\normalse}
+%	\AuthorNameSize{\normalsize}
 %
 % (e) and you can omit any previous degrees from the title page, instead mentioning them in the biographical sketch
 
@@ -250,12 +230,11 @@
 % This command is useful when the text has not already reach the bottom of the page, since the glue gets squashed automatically
 % when the page is too full.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %%% Make titlepage
 \maketitle
-
 
 %%%%%%%%% Content that you need to write follows! %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -265,8 +244,6 @@
 
 %%% Frontmatter (write this material in the mentioned files)  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% \include{committee_members}% This page is optional. Edit the file committee_members.tex 
-
 % The abstract environment creates all the required headings and footers. 
 % You only need to the text of the abstract in the file abstract.tex
 \begin{abstract}
@@ -274,8 +251,6 @@
 \end{abstract}
 
 \include{acknowledgments}% acknowledgments.tex (.tex extension is presumed by \include) 
-
-% \include{biography}% biography.tex (optional, see https://libraries.mit.edu/distinctive-collections/thesis-specs/#format)
 
 %%% Table of contents and lists of stuff (delete unused lists, i.e., if no tables or figures) %%%%%
 
@@ -287,18 +262,20 @@
 
 %% If you want to use "double spacing", you should start here...
 
-\include{chapter1}% .tex extension is presumed
-\include{chapter2}
-\include{chapter3}
-\include{chapter4}
-\include{chapter5}
+\include{intro}% .tex extension is presumed
+\include{litreview}
+\include{methods}
+\include{results}
+\include{conslusions}
 
 
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\include{appendixa}% listings example
-% \include{appendixb}% longtable example
+\include{appendixa}
+\include{appendixb}
+\printglossary[type=\acronymtype, title=List of Acronyms, toctitle=List of Acronyms]
+
 
 
 %%% Bibliography (biblatex)  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,7 +1,7 @@
 % From mitthesis package
 % Documentation: https://ctan.org/pkg/mitthesis
 
-\ProvidesFile{mitthesis-lucida.tex}[2024/10/13 v1.04 Load Lucida fonts]
+\ProvidesFile{mitthesis-lucida.tex}[2026/01/31 v1.06 Load Lucida fonts]
 
 %% Lucida Bright and Lucida Bright Math fonts (available from the TeX Users Group)
 
@@ -13,7 +13,7 @@
 	% some other options: seriftt (much larger quad size!), lucidasmallscale % 2024/10/13
 	\RequirePackage{bm}
 \else
-    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket},mathbf=sym]{unicode-math}
     % suppress warnings about lack of integration between mathtools and unicode-math
     % unicode-math loads the fontspec package
 
@@ -26,10 +26,10 @@
     % locl 		script/language specific (localized) forms 				on
     %
     % FEATURE 	FONT 						DESCRIPTION
-    % ss01 		Lucida Sans & Typewriter 	use dotted zero: 𝟶 vs. default 0.
+    % ss01 		Lucida Sans & Typewriter 	use dotted zero: ðŸ¶ vs. default 0.
     % ss01 		use Lucida-standard shapes:
-    % 			Lucida Grande Mono 			ØOQ vs. default 0OQ;
-    % 			Lucida Console 				ØOQ vs. default 0OQ.
+    % 			Lucida Grande Mono 			Ã˜OQ vs. default 0OQ;
+    % 			Lucida Console 				Ã˜OQ vs. default 0OQ.
     
     \setmainfont{LucidaBrightOT}[% main rm
           Ligatures=TeX,
@@ -66,12 +66,12 @@
     
     %% MATH FONTS
     %
-    % ss01 	alternate Latin lower case math italic identical to text italic. This option is not recommended as Greek 𝜈 (nu) and Latin 𝑣 (vee) become too similar
-    % ss02 	smaller arrows (original Type 1 size): ⇑ vs. default ⇑.
+    % ss01 	alternate Latin lower case math italic identical to text italic. This option is not recommended as Greek ðœˆ (nu) and Latin ð‘£ (vee) become too similar
+    % ss02 	smaller arrows (original Type 1 size): â‡‘ vs. default â‡‘.
     % ss03 	attempt to imitate Type 1 fonts
     % ss04 	calligraphic alternative (similar to the Type 1 design) to the math script alphabet
-    % ss05 	use a slashed-zero style for the empty set character (U+2205): Ø vs. default ∅
-    % ss08 	emphasize right and bottom edges of the d’Alembertian operator (U+29E0, \laplac), to follow the design of the Laplace operator (U+2206, \increment, Δ); the default design emphasizes the left and upper edges. Also available in the bold math font.
+    % ss05 	use a slashed-zero style for the empty set character (U+2205): Ã˜ vs. default âˆ…
+    % ss08 	emphasize right and bottom edges of the dâ€™Alembertian operator (U+29E0, \laplac), to follow the design of the Laplace operator (U+2206, \increment, Î”); the default design emphasizes the left and upper edges. Also available in the bold math font.
     %
     \setmathfont{LucidaBrightMathOT}[% main math
     	  Scale=MatchUppercase,
@@ -115,7 +115,7 @@
     	  BoldFont=LucidaBrightMathOT-Demi.otf,
     ]
     %% Fix unicode-math operator font not set up for bold face (default \mathrm). See https://github.com/wspr/unicode-math/issues/468
-    \setoperatorfont\normalfont
+    \setoperatorfont\symup
     %
     % note \mathbfit = \symbfit
     
@@ -150,3 +150,11 @@
         BoldItalicFont=*-BoldItalic,
     	]
 \fi
+%
+\RequirePackage{etoolbox} % may already be loaded by the .cls file
+% Patch headings to automatically use \mathversion{bold}. Compare to report.cls. 
+\patchcmd{\section}{\normalfont}{\mathversion{bold}\normalfont}{}{}
+\patchcmd{\subsection}{\normalfont}{\mathversion{bold}\normalfont}{}{}
+\patchcmd{\subsubsection}{\normalfont}{\mathversion{bold}\normalfont}{}{}
+\patchcmd{\paragraph}{\normalfont}{\mathversion{bold}\normalfont}{}{}
+\patchcmd{\subparagraph}{\normalfont}{\mathversion{bold}\normalfont}{}{}

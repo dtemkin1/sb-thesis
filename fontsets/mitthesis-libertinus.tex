@@ -1,7 +1,7 @@
 % From mitthesis package
 % Documentation: https://ctan.org/pkg/mitthesis
 
-\ProvidesFile{mitthesis-libertinus.tex}[2025/04/24 v1.01 Load Libertinus and related fonts]
+\ProvidesFile{mitthesis-libertinus.tex}[2025/09/23 v1.02 Load Libertinus and related fonts]
 
 %% Libertinus (serif) text font with newtxmath[libertinus] (pdftex) or Libertinus (unicode) math font
 %
@@ -19,7 +19,7 @@
 \else
 	\ClassNoteNoLine{\ClassName}{Loading Libertinus OTF text and math fonts}
 	%
-    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket}]{unicode-math}
+    \RequirePackage[warnings-off={mathtools-colon,mathtools-overbracket},mathbf=sym]{unicode-math}
     % suppress warnings about lack of integration between mathtools and unicode-math
     % unicode math loads the fontspec package
  	%
@@ -59,7 +59,7 @@
     \setmathfont{libertinusmath-regular}[%
      	Extension = .otf,   
     	Scale=MatchUppercase,
-%		BoldFont = *,% This font lacks a bold version
+%		BoldFont = *,% This font lacks a bold version; you could use FakeBold as a stand in
     	RawFeature={+ss08},% +ss08 gives slanted integrals (no other features) 	
     	]
 	\setmathfont{Latin Modern Math}[range=\nabla,Scale=0.91] % I hate the backward nabla in Libertinus Math...
