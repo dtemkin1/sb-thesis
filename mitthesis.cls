@@ -1156,7 +1156,9 @@
 		    \tag_mc_end:
 		    \tag_struct_end:
 		    & \seq_item:cn { g__mitthesis_supervisor_name_seq } { \g__signature_supno_int } \\
-    		& \seq_item:cn { g__mitthesis_supervisor_title_seq } { \g__signature_supno_int },\ 
+    		& \seq_item:cn { g__mitthesis_supervisor_title_seq } { \g__signature_supno_int } \\ 
+            % department requested it on a new line
+            & \seq_item:cn { g__mitthesis_supervisor_dept_seq } { \g__signature_supno_int },\
     			\g__mitthesis_titlepg_sup_designation_tl \\[1em]
     	}
     	\int_compare:nNnF { \g__mitthesis_acceptor_cnt_int } = {0} {
@@ -1344,7 +1346,7 @@
 %	
 	\bool_if:NTF \g__mitthesis_cclicense_bool { 
 		\tl_gset:Nn \g__mitthesis_copyright_license_tl 
-			{ This\ work\ is\ licensed\ under\ a\ \mbox{ \g__mitthesis_copyright_cclicense_tl }\ license.\par
+			{ License:\ \mbox{ \g__mitthesis_copyright_cclicense_tl }.\par
 			  \g__mitthesis_copyright_mitpermission_tl 
 			}
 		\tl_gset:Nn \g__mitthesis_copyright_pdfrights_tl 	 
