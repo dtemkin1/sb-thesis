@@ -32,7 +32,10 @@
 \usepackage[nopatch=footnote]{microtype}
 
 %% Load this if using the two-column nomenclature format, \begin{nomenclature*}
-\usepackage{multicol}
+% \usepackage{multicol}
+
+\usepackage[most]{tcolorbox}
+\usepackage{tabularx}
 
 
 %%%%%%%%%  Graphics path (to figure files)  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -149,35 +152,7 @@
 
 % ACRONYMS
 
-% for list of acronyms
-\usepackage[nomain, acronym, toc, section=chapter, numberedsection=autolabel, nohypertypes={acronym}]{glossaries}
-
-\makeglossaries
-
-\newacronym{gtfs}{GTFS}{General Transit Feed Specification}
-\newacronym{od}{OD}{origin-destination}
-\newacronym{acs}{ACS}{American Community Survey}
-\newacronym{avl}{AVL}{Automatic Vehicle Location}
-\newacronym{afc}{AFC}{Automatic Fare Collection}
-\newacronym{mbta}{MBTA}{Massachusetts Bay Transit Authority}
-\newacronym{brt}{BRT}{bus rapid transit}
-\newacronym{sbrp}{SBRP}{School Bus Routing Problem}
-\newacronym{vrp}{VRP}{Vehicle Routing Problem}
-\newacronym{milp}{MILP}{Mixed-Integer Linear Program}
-\newacronym{bird}{BiRD}{Biobjective Routing Decomposition}
-\newacronym{bps}{BPS}{Boston Public Schools}
-\newacronym{stsp}{STSP}{School Time Selection Problem}
-\newacronym{gqap}{GQAP}{Generalized Quadratic Assignment Problem}
-\newacronym{ilp}{ILP}{integer linear programming}
-\newacronym{lp}{LP}{linear program}
-\newacronym{afi}{AFI}{Accessibility Fairness Index}
-\newacronym{ej}{EJ}{Environmental Justice}
-\newacronym{fta}{FTA}{Federal Transit Administration}
-\newacronym{mdpi}{MDPI}{Monotone Design Problem with Implementation}
-\newacronym{cdpi}{CDPI}{Co-Design Problems with Implementation}
-\newacronym{mcdp}{MCDP}{Monotone Co-Design Problem}
-\newacronym{av}{AV}{autonomous vehicle}
-\newacronym{osm}{OSM}{OpenStreetMap}
+\input{acronyms}
 
 %%%%%%%%%%%%%%  End preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -262,11 +237,13 @@
 
 %% If you want to use "double spacing", you should start here...
 
+\glsresetall
+
 \include{intro}% .tex extension is presumed
 \include{litreview}
 \include{methods}
 \include{results}
-\include{conslusions}
+\include{conclusions}
 
 
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

@@ -1,1 +1,104 @@
 \chapter{Data and Methodology}
+\label{ch:methods}
+
+I use the monotone theory of co-design to split the complex bus network redesign problem into interconnected components, which can each share common interfaces while preserving relationships between requirements and functionalities. Each component, such as fleet specification, route design, assignment of students to trips, and equity evaluation, is modeled as a monotone relation between resource inputs (including budget, available vehicles, allowable maximum ride times) and achievable functionalities (coverage, travel time distributions, equity scores). This allows one to represent both existing network designs and possible alternatives in a common framework, making it possible to determine whether the present system is dominated by any feasible configuration under multiple criteria.
+
+Using this general framework, I then model a case-study of \gls{fps} school buses as a vehicle routing problem with a single bus depot, fixed pickup locations, and assigned drop-offs. I treat the underlying road network and stop set as fixed, since infrastructure changes are limited in the short to medium term, and add temporal constraints for student passengers to cap student in-vehicle times and ensure arrival before school start times.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth, alt={Grid-based toy street network showing optimized school bus routes. Colored route segments connect selected stops to schools and a depot, demonstrating that the routing formulation can generate feasible bus paths on a small artificial network.}]{figures/initial_test.png}
+    \caption{Initial test of routing in an arbitrary toy network.}
+    \label{fig:placeholder}
+\end{figure}
+
+The co-design composition enables a clear separation between physical and institutional subsystems while maintaining their properties. For example, a fleet component maps a set of buses B with capacities $C_b$, ranges $R_b$, and accessibility attributes $W_b$ to feasible routing capabilities. Meanwhile, a staffing component models the availability of monitors and drivers, and a policy component encodes equity goals such as sufficient coverage for particular demographic groups. These components are combined into a global design problem whose solution set can be projected onto different objective spaces like cost, coverage, and equity to generate explicit Pareto frontiers that planners and stakeholders can interrogate.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.99\linewidth, alt={Co-design system diagram showing how routing service inputs, bus capacity, driver, fuel, maintenance, monitor, and BiRD algorithm parameters connect to outputs such as total cost, unserved students, stops used, emissions, and accessibility-related service metrics.}]{figures/codesign_diagram.pdf}
+    \caption{Co-design process diagram illustrating how different components interconnect}
+    \label{fig:codesign}
+\end{figure}
+
+\section{Data Sources and Preprocessing}
+
+I utilize network, operational, demand, and demographic information and format it into a common mathematical representation. The physical road network is obtained from \gls{osm} and converted into a directed graph $G=\langle V,E,\omega\rangle$, where nodes $V$ represent intersections, depots, stops, and schools. Directed edges $E$ capture feasible roadway movements with associated attributes $\omega_e$ such as length, speed, and travel time. From this base graph, I identify the subset of nodes corresponding to bus pick-up locations $P$, destination locations $S$, and bus depot locations $D$ using geocoded address records and provided facility data.
+
+\gls{gtfs} data can provide scheduled trip patterns, stop locations, and route identifiers for the existing network, which are linked to \gls{osm}-derived nodes. If available, \gls{avl} traces that are representative of a given area are cleaned and matched to the road network to estimate real-world travel times. These estimates are then aggregated for every edge and time-of-day and used to define the travel-time component of $\omega_e$.
+
+Demand is represented as a set of individuals M, each associated with a pickup stop $p_m\in P$, an assigned destination $s_m\in S$. For the case study, I additionally employ a school type $\tau_m\in T$ that encodes whether a school is elementary, middle, or high school. Additionally, once can exclude students that reside within a fixed walking threshold $\gamma$ of their destination school by computing network shortest-path distances from each school to nearby residential locations and filtering those below $\gamma$. Demographic attributes from the \gls{acs}, such as income distribution, race and ethnicity composition, English proficiency, and car access, are joined to student and stop nodes via census block groups, which can later be used as equity indicators when evaluating Pareto-optimal designs. 
+
+I also incorporate student-level flags indicating the need for additional on-board support and wheelchair accessibility. A binary flag $f_m$ identifies students in set $F\subseteq M$ who require a monitor, and a subset $W\subseteq F$ identifies those who require a wheelchair-accessible bus. These attributes are derived from the district's special education transportation records and are used to enforce monitor and vehicle constraints at the routing stage. 
+
+\section{\Glsentryfull{milp} Formulation}
+
+\autoref{fig:codesign} summarizes the resulting co-design composition, with each box representing an \gls{mdpi} (monitor, bus capacity, driver, fuel, maintenance, and routing service) connected via shared functionalities and resources. At the core of this framework is a decomposed \gls{milp} formulation that encodes the routing and assignment decisions. This can be tailored to a specific use case, and below is a formulation for the specific Framingham case study. The full formulation below is presented as background motivation; due to computational intensity, the implementation that follows uses a modified  \gls{bird} backend from \textcite{bertsimasOptimizingSchoolsStart2019}, referred to here as \gls{bra}, with two modes: \verb!scenario! and \verb!lbh!.
+
+\subsection{Initial Formulation}
+
+The routing network is defined by routing nodes $N\coloneqq P\cup S\cup D^{+}\cup D^{-}\cup S^{+}$ and directed arcs $A\subseteq N\times N$, where each arc $(i,j)\in A$ represents travel along a (precomputed) shortest path in $G$ with distance $d_{ij}$ and travel time $t_{ij}$. To model multi-round ``trip chaining'' for each bus, I introduce a set of rounds $Q={1,\ldots,Q_{max}}$, where each round represents a sub-tour that begins at a node and ends either at a school or at the depot. The initial round must begin at the depot, and the final round must end at the depot.
+
+Decision variables in the \gls{milp} include $z_b$ for whether bus $b$ is used, $z_{b,q}$ for whether bus $b$ operates in round $q$, and $x_{b,q,ij}$ for whether bus $b$ traverses arc $\left(i,j\right)$ in round $q$. The variables $v_{b,q,i}$ are introduced to indicate whether node $i$ is visited by bus $b$ in round $q$, and $e_{b,q,s}$ record whether round $q$ for bus $b$ ends at school $s$, enabling trip chaining via school start-copy nodes $s^{+}$ for subsequent rounds. Student bus assignments are represented by $a_{m,b,q}$, which equals 1 if student $m$ is on bus $b$ in round $q$. These variables enforce that each student is assigned to at most one bus and one round and that all students are served when the coverage ratio $\phi$ is set to 1.
+
+Time and capacity constraints are captured using continuous variables $T_{b,q,i}$ for the arrival time of bus $b$ at node $i$ in round $q$, and integer variables $L_{b,q,i}$ for the on-board passenger load immediately after visiting node $i$. Alighting and boarding service times are set through user defined constant parameters $\alpha=0.3$ minutes per boarding and $\beta=0.5$ minutes per alighting, which both contribute additively to the time-linking constraints on arcs and to the chaining of rounds at schools. To handle differences in school types and bus capacity for different ages, the \gls{milp} formulation also includes binary variables $y_{b,q,\tau}$ specifying the active school type $\tau\in T$ for each bus and round, along with a multiplier $\kappa_\tau$ that scales the functional capacity of bus $b$ according to the served school type (e.g. elementary school students can fit 3 to a seat compared to 2 for middle and high schoolers).
+
+The objective function minimizes a weighted sum of total distance traveled across buses, an optional per-round tiebreaker, and an indicator for using buses with monitors (which increases labor cost). Specifically, the primary term sums distances $d_{ij}$ over all active arcs $x_{b,q,ij}$, while a small penalty $\lambda_{\mathrm{round}}$ is applied to $z_{b,q}$ to discourage unnecessary tour fragments (without overriding distance minimization when $\lambda_{\mathrm{round}}$ is small). An additional term $r_b^{\mathrm{mon}}$ indicates whether bus $b$ carries a monitor, which allows the optimization to incorporate monitor staffing costs or prioritize configurations that reduce monitor deployment (while still meeting all special transportation constraints) by summing across all buses.
+
+These constraints together enforce student assignment coverage, tour feasibility, time consistency, max time limits, capacity adherence, and monitor and wheelchair-accessibility requirements. Assignment constraints ensure each student is assigned at most once and that the aggregate number of assigned students meets the desired coverage $\phi\left\vert M\right\vert$. Flow-conservation and depot/school connection constraints also ensure that each round is a valid tour.
+
+Time-linking constraints guarantee that arrival times along arcs respect travel plus dwell times and that buses depart schools for the next round only after boarding/alighting. Latest-arrival constraints require that the arrival time at each school $s$, plus the relevant alighting dwell, does not exceed the latest allowable arrival $\ell_s\coloneq h_s-\delta_s$, where $h_s$ is the bell time (represented as minutes from midnight) and $\delta_s$ is a required slack. To control individual student experiences, precedence constraints enforce that a student’s school is visited after their pickup stop by at least a small separation $\epsilon$, and ride-time constraints require that the difference $T_{b,q,s_m}-T_{b,q,p_m}$ does not exceed the maximum in-vehicle time $H_{\mathrm{ride}}$  (set to 60 minutes) when $a_{m,b,q}=1$.
+
+Capacity dynamics are handled by linking the load variables $L_{b,q,i}$ across arcs by using the number of students boarding or alighting at each node and bounding the load by the actual capacity $C_b\sum_{\tau}\kappa_\tau y_{b,q,\tau}$. Additional constraints set loads to zero at depots and school start-copy nodes to reset tours, as well as ensure that ending a round at a school implies an empty bus at that school (if required). Monitor-related constraints couple the presence of flagged students $m\in F$ with the binary variable $r_b^{\mathrm{mon}}$, making sure that any bus carrying a flagged student in any round also carries a monitor, and also that wheelchair-using students $m\in W$ can only be assigned to buses with $W_b=1$.
+
+While this was able to handle small networks well as shown in \autoref{fig:prelim_results}, this became prohibitively computationally expensive as the problem size increased. 
+
+\begin{figure}[!htbp]
+    \centering
+    \begin{subfigure}{0.495\textwidth}
+        \includegraphics[width=0.99\textwidth, alt={Map of initial optimized bus routes for students within one kilometer of a school, without trip chaining. Red route segments show the selected bus path over the Framingham road network.}]{figures/no_chaining_routes.png}
+        \subcaption{All students within 1 km of a school (no chaining)}
+    \end{subfigure}
+    \begin{subfigure}{0.495\textwidth}
+        \includegraphics[width=0.99\textwidth, alt={Map of initial optimized bus routes for students within one kilometer of two schools, with trip chaining. Red route segments show the selected bus path over the Framingham road network.}]{figures/chaining_routes.png}
+        \subcaption{All students within 1 km of 2 schools (chaining)}
+    \end{subfigure}
+    \caption{Initial test routes using the original formulation}
+    \label{fig:prelim_results}
+\end{figure}
+
+\subsection{\Glsentryfull{bird} Backend Formulation}
+
+The implemented \gls{bird} backend provides two main routing algorithms: a scenario-based optimization method and a largest-bus constructive heuristic, denoted as \verb!scenario! and \verb!lbh!. Both methods operate on the same underlying  representation, which stores schools, stops, student assignments, fleet attributes, travel times, bell times, and special transportation requirements. However, they differ in how they search the feasible design space.
+
+The \verb!scenario! method follows a generate-and-optimize structure. First, it constructs a large pool of feasible candidate routes using greedy nearest-insertion procedures under multiple perturbed parameter settings. These perturbations are the ``scenarios'' in the implementation: they are not stochastic demand realizations, but alternative route-generation settings used to diversify the candidate pool. Each candidate route serves a single school $s$ and already satisfies local feasibility constraints such as vehicle capacity, school arrival timing, student ride-time limits, and special transportation restrictions. The second stage then solves a \gls{milp} that selects from this candidate set. In the homogeneous case, this resembles a set-covering formulation in which binary route-selection variables cover required stops while minimizing a weighted route cost. In the fleet-aware case, the model additionally assigns selected routes to specific buses, tracks bus usage, and permits chaining multiple school routes onto a single vehicle when the resulting arrival and departure times remain feasible.
+
+The fleet-aware \verb!scenario! formulation is therefore a decomposed alternative to the full arc-based \gls{milp} described prior. Rather than deciding every street-level arc traversal directly, it optimizes over complete feasible route candidates. The model includes variables indicating whether a bus is used, whether a route is assigned to a bus, whether a route begins or ends a bus itinerary, and whether two routes can be linked consecutively by the same bus. Sparse linking variables encode only temporally feasible route-to-route transitions, reducing the number of impossible chaining decisions considered by the solver. The implementation also solves the problem in service groups, routing wheelchair-accessible students first, then other students requiring special education transportation, and finally conventional transportation students. This staged structure reflects operational priority constraints while still allowing later stages to use remaining fleet capacity.
+
+The \verb!lbh! method provides a faster solver-free baseline. Instead of generating many routes and solving a mixed-integer selection problem, it constructs bus itineraries directly through repeated cheapest insertion. Buses are considered in capacity-priority order, and the algorithm inserts uncovered stops into the current itinerary whenever doing so preserves capacity, grade compatibility, maximum ride-time, and school timing feasibility. For fixed bell-time schools, insertions are evaluated against a fixed arrival constraint; for schools with allowable time windows, the insertion logic also accounts for the flexibility of the arrival window. As in the scenario-based method, the fleet-aware heuristic proceeds through wheelchair, special education, and conventional service groups.
+
+These two \gls{bird} modes expose a useful quality-runtime tradeoff. The \verb!scenario! method is slower and requires a \gls{milp} solver, but it can make globally coordinated decisions over a diverse pool of candidate routes and explicitly optimize route chaining across a heterogeneous fleet. The \verb!lbh! method is substantially faster and does not require a solver, but it is myopic: once a stop insertion or bus assignment is made, the algorithm does not globally reconsider that choice. In the framework, \verb!scenario! is therefore used when higher-quality optimized designs are desired, while \verb!lbh! provides a computationally lightweight benchmark and fallback routing procedure. Pareto fronts created using this method and testing data can be seen in \autoref{fig:bird_simple}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.99\linewidth, alt={Three side-by-side Pareto-front scatter plots comparing \Glsentryfull{lbh} and Scenario \glsentryfull{bird} outputs on testing data. The plots show tradeoffs between unassigned students and cost, unassigned students and annual emissions, and stops used and cost. Blue points represent \Glsentryfull{lbh} solutions, red points represent Scenario solutions, and the black line marks the Pareto frontier.}]{figures/routing_bird_mcdp_pareto_routing_simple_caps.pdf}
+    \caption{Pareto fronts using \gls{bird} with testing data.}
+    \label{fig:bird_simple}
+\end{figure}
+
+\section{Case Study Implementation for Framingham}
+
+I implement the framework described for the Framingham, Massachusetts school bus system to illustrate its practical use in evaluating and redesigning a real-world network. The case study for \gls{fps} focuses on morning school arrivals for a single day representative of regular operations, using district-provided data on student assignments, current route structures, fleet composition, and special transportation requirements. Thus, I map the provided data into the sets and parameters for \gls{bra}, including the actual fleet $B$, depot configuration $D$, school set $S$, and student set $M$ with flags $F$ and $W$, and use the candidate-route selection and decomposition model. The \gls{osm}-derived Framingham road network used to construct travel arcs is shown in \autoref{fig:framingham}.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.5\linewidth, alt={Map of the Framingham road network used to construct travel arcs. White road segments appear on a dark background, with a red boundary outlining the study area.}]{figures/framingham.png}
+    \caption{Current Framingham road network used to create travel arcs}
+    \label{fig:framingham}
+\end{figure}
+
+To implement this for Framingham, I first encoded the current routing pattern directly into the same format used in \gls{bird}, allowing comparisons between existing routes with generated ones. This produces a feasible design point in the co-design framework that reflects the existing system. I then solve the \gls{bird} candidate-selection model under the same resource constraints but with different objective weightings that combine cost, coverage, or equity to generate a family of alternative feasible designs.
+
+I also explore multiple values of $Q_{max}$ to allow or restrict the extent of trip chaining and examine how this affects fleet utilization and student ride times. Furthermore, one can use a $Q_{max}$ of 1 to determine whether trip chaining is beneficial. To investigate equity outcomes, I compute post-solution metrics such as coverage rates by income quintile, average and maximum ride times by demographic group, and the spatial distribution of unassigned or long-ride students relative to \gls{acs}-based vulnerability indices.
+
+The categorical co-design framing shaped the Framingham experiments by treating routing as a compositional feasibility problem: district resources, service requirements, accessibility constraints, and environmental costs are modeled as interconnected design variables rather than as a single monolithic objective. The Pareto fronts therefore represent the feasible tradeoff surface exposed by this design space, showing how changes in one component, such as fleet use, stop coverage, or student service, propagate through the broader transportation system.
