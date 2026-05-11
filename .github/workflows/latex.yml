@@ -12,7 +12,7 @@ jobs:
           root_file: main.tex
           latexmk_use_lualatex: true
       - name: Upload PDF file
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: PDF
           path: main.pdf
