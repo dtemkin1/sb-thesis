@@ -2,6 +2,9 @@
 $pdf_mode = 4;
 $postscript_mode = $dvi_mode = 0;
 
+# pdf name
+$jobname = 'temkin-dtemkin-sb-dusp-2026-thesis';
+
 # glossaries
 add_cus_dep( 'acn', 'acr', 0, 'makeglossaries' );
 add_cus_dep( 'glo', 'gls', 0, 'makeglossaries' );
