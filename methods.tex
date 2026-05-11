@@ -27,13 +27,13 @@ I utilize network, operational, demand, and demographic information and format i
 
 \gls{gtfs} data can provide scheduled trip patterns, stop locations, and route identifiers for the existing network, which are linked to \gls{osm}-derived nodes. If available, \gls{avl} traces that are representative of a given area are cleaned and matched to the road network to estimate real-world travel times. These estimates are then aggregated for every edge and time-of-day and used to define the travel-time component of $\omega_e$.
 
-Demand is represented as a set of individuals M, each associated with a pickup stop $p_m\in P$, an assigned destination $s_m\in S$. For the case study, I additionally employ a school type $\tau_m\in T$ that encodes whether a school is elementary, middle, or high school. Additionally, once can exclude students that reside within a fixed walking threshold $\gamma$ of their destination school by computing network shortest-path distances from each school to nearby residential locations and filtering those below $\gamma$. Demographic attributes from the \gls{acs}, such as income distribution, race and ethnicity composition, English proficiency, and car access, are joined to student and stop nodes via census block groups, which can later be used as equity indicators when evaluating Pareto-optimal designs. 
+Demand is represented as a set of individuals $M$, each associated with a pickup stop $p_m\in P$, an assigned destination $s_m\in S$. For the case study, I additionally employ a school type $\tau_m\in T$ that encodes whether a school is elementary, middle, or high school. Additionally, one can exclude students that reside within a fixed walking threshold $\gamma$ of their destination school by computing network shortest-path distances from each school to nearby residential locations and filtering those below $\gamma$. Demographic attributes from the \gls{acs}, such as income distribution, race and ethnicity composition, English proficiency, and car access, are joined to student and stop nodes via census block groups, which can later be used as equity indicators when evaluating Pareto-optimal designs. 
 
 I also incorporate student-level flags indicating the need for additional on-board support and wheelchair accessibility. A binary flag $f_m$ identifies students in set $F\subseteq M$ who require a monitor, and a subset $W\subseteq F$ identifies those who require a wheelchair-accessible bus. These attributes are derived from the district's special education transportation records and are used to enforce monitor and vehicle constraints at the routing stage. 
 
 \section{\Glsentryfull{milp} Formulation}
 
-\autoref{fig:codesign} summarizes the resulting co-design composition, with each box representing an \gls{mdpi} (monitor, bus capacity, driver, fuel, maintenance, and routing service) connected via shared functionalities and resources. At the core of this framework is a decomposed \gls{milp} formulation that encodes the routing and assignment decisions. This can be tailored to a specific use case, and below is a formulation for the specific Framingham case study. The full formulation below is presented as background motivation; due to computational intensity, the implementation that follows uses a modified  \gls{bird} backend from \textcite{bertsimasOptimizingSchoolsStart2019}, referred to here as \gls{bra}, with two modes: \verb!scenario! and \verb!lbh!.
+\autoref{fig:codesign} summarizes the resulting co-design composition, with each box representing an \gls{mdpi} (monitor, bus capacity, driver, fuel, maintenance, and routing service) connected via shared functionalities and resources. At the core of this framework is a decomposed \gls{milp} formulation that encodes the routing and assignment decisions. This can be tailored to a specific use case, and below is a formulation for the specific Framingham case study. The full formulation below is presented as background motivation; due to computational intensity, the implementation that follows uses a modified \gls{bird} backend from \textcite{bertsimasOptimizingSchoolsStart2019}, referred to here as \gls{bra}, with two modes: \verb!scenario! and \verb!lbh!.
 
 \subsection{Initial Formulation}
 
@@ -51,8 +51,6 @@ Time-linking constraints guarantee that arrival times along arcs respect travel 
 
 Capacity dynamics are handled by linking the load variables $L_{b,q,i}$ across arcs by using the number of students boarding or alighting at each node and bounding the load by the actual capacity $C_b\sum_{\tau}\kappa_\tau y_{b,q,\tau}$. Additional constraints set loads to zero at depots and school start-copy nodes to reset tours, as well as ensure that ending a round at a school implies an empty bus at that school (if required). Monitor-related constraints couple the presence of flagged students $m\in F$ with the binary variable $r_b^{\mathrm{mon}}$, making sure that any bus carrying a flagged student in any round also carries a monitor, and also that wheelchair-using students $m\in W$ can only be assigned to buses with $W_b=1$.
 
-While this was able to handle small networks well as shown in \autoref{fig:prelim_results}, this became prohibitively computationally expensive as the problem size increased. 
-
 \begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.495\textwidth}
@@ -66,6 +64,8 @@ While this was able to handle small networks well as shown in \autoref{fig:preli
     \caption{Initial test routes using the original formulation}
     \label{fig:prelim_results}
 \end{figure}
+
+While this was able to handle small networks well as shown in \autoref{fig:prelim_results}, this became prohibitively computationally expensive as the problem size increased. 
 
 \subsection{\Glsentryfull{bird} Backend Formulation}
 
