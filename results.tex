@@ -25,6 +25,7 @@ The available data is sufficient to identify and assess the current routing and 
 \end{table}
 
 \section{Existing Routes}
+\label{sec:existing_routes}
 
 Current routing is shaped by the interaction between district school choice policies and Massachusetts transportation requirements. Under Massachusetts General Laws (MGL Ch. 71, Section 68), districts must provide free transportation to K-6 students living more than 2 miles from school. As shown in \autoref{fig:geospatial}, this policy creates a clear incentive for some families in Framingham to select schools farther from home in order to secure transportation coverage. This pattern is especially visible among lower-income and minority households in the southern part of the city, as well as among families of students with disabilities.
 
@@ -88,7 +89,9 @@ The preliminary results indicate that \gls{bra} can improve \gls{fps}'s bus oper
     \label{tab:travel_times}
 \end{table}
 
-The benefits are not limited to fleet utilization. Across all tracked student groups, \gls{bra} reduces estimated mean travel times relative to the current routing baseline, as shown in \autoref{tab:travel_times}. For currently assigned bus riders, mean travel time falls from 43.08 minutes to 30.28 minutes, a reduction of approximately 29.7\%, while the maximum observed travel time falls from 133.38 minutes to 59.61 minutes. Vulnerable groups also see consistent improvements (\autoref{tab:travel_times}): mean travel time declines from 41.24 to 31.23 minutes for students from households where English is not the primary language, from 39.83 to 31.54 minutes for students from non-car-owning households, and from 36.68 to 25.34 minutes for students with disabilities. \autoref{fig:routes} shows the current and proposed route layouts side-by-side.
+The benefits are not limited to fleet utilization. Across all tracked student groups, \gls{bra} reduces estimated mean travel times relative to the current routing baseline, as shown in \autoref{tab:travel_times}. For currently assigned bus riders, mean travel time falls from 43.08 minutes to 30.28 minutes, a reduction of approximately 29.7\%, while the maximum observed travel time falls from 133.38 minutes to 59.61 minutes. 
+
+Vulnerable groups also see consistent improvements under our modeling assumptions (\autoref{tab:travel_times}): mean travel time declines from 41.24 to 31.23 minutes for students from households where English is not the primary language, from 39.83 to 31.54 minutes for students from non-car-owning households, and from 36.68 to 25.34 minutes for students with disabilities. Additionally, because mean travel time decreased for non-car-owning households by approximately 8.29\% under \gls{bra}, this suggests that efficiency improvements are not achieved by sacrificing service to transit-dependent households. \autoref{fig:routes} shows the current and proposed route layouts side-by-side.
 
 These findings are directional rather than final, since the analysis does not yet account for intersection delay, time-varying congestion, or all student-specific service requirements (e.g. wheelchair students due to missing data). Nonetheless, they establish a clear proof of concept: better route design can potentially allow \gls{fps} to serve the same students with fewer buses, shorter rides, and more consistent travel times across demographic groups.
 
@@ -112,7 +115,7 @@ These findings are directional rather than final, since the analysis does not ye
     \label{fig:routes}
 \end{figure}
 
-Additionally, \gls{fps} is moving from an opt-in routing model to an opt-out model, where students are provided transport by default. Thus, I applied \gls{bra} with the current fleet constraints and found that the current student population living over 1.5 miles from their school can be largely served using the existing fleet available to \gls{fps}. Conversely, trying to serve all students in the district with the current bus fleet is infeasible with the assumed operational constraints, as shown in \autoref{tab:travel_times_all}. While these preliminary results are directional and should be further refined, they demonstrate how \gls{fps} can substantially change their bus routing to serve a greater number of students while improving average travel-time outcomes under the modeled assumptions.
+Additionally, \gls{fps} is moving from an opt-in routing model to an opt-out model, where students are provided transport by default. Thus, I applied \gls{bra} with the current fleet constraints and found that the current student population living over 1.5 miles\footnote{As mentioned in \autoref{sec:existing_routes}, \gls{fps} is required under Massachusetts law to offer no-cost transportation for students living over 2 miles away. However, as of writing, \gls{fps} also offers bus transportation for students living between 1 and 2 miles away for an associated fee \cite{framinghampublicschoolsRider, framingham_school_committee_student_2022}.} from their school can be largely served using the existing fleet available to \gls{fps}. Conversely, trying to serve all students in the district with the current bus fleet is infeasible with the assumed operational constraints, as shown in \autoref{tab:travel_times_all}. While these preliminary results are directional and should be further refined, they demonstrate how \gls{fps} can substantially change their bus routing to serve a greater number of students while improving average travel-time outcomes under the modeled assumptions.
 
 \begin{table}[!htbp]
     \centering
@@ -159,7 +162,7 @@ Although the \gls{bra} experiments use a constant-speed assumption for travel-ti
     \includegraphics[width=0.495\linewidth, alt={Scatter plot of total annual cost versus students assigned for \glsfullentry{bird} testing data. \glsfullentry{lbh} and Scenario solutions are plotted to compare how stop usage affects cost.}]{figures/routing_bird_mcdp_pareto_all_cost_vs_unassigned.pdf}
     \includegraphics[width=0.495\linewidth, alt={Scatter plot of total annual cost versus students assigned for \glsfullentry{bird} testing data. \glsfullentry{lbh} and Scenario solutions are plotted, with the Pareto frontier showing the best emission-coverage tradeoff.}]{figures/routing_bird_mcdp_pareto_all_emissions_vs_unassigned.pdf}
     \includegraphics[width=0.495\linewidth, alt={Scatter plot of total annual cost versus students assigned for \glsfullentry{bird} testing data. \glsfullentry{lbh} and Scenario solutions are plotted, with the Pareto frontier showing the best cost-coverage tradeoff.}]{figures/routing_bird_mcdp_pareto_all_cost_vs_stops.pdf}
-    \caption{Pareto fronts for \gls{bra} routing configuration with student data.}
+    \caption{Pareto fronts for \gls{bra} routing configuration with student data. Each point on these fronts is a valid solution of the co‑design problem with different resource allocations among \gls{mdpi} components (fleet, monitors, fuel, routing). The Figure makes visible the planning tradeoffs implied by the categorical composition.}
     \label{fig:pareto}
 \end{figure}
 
