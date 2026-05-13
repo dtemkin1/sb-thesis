@@ -3,23 +3,16 @@
 
 I use the monotone theory of co-design to split the bus network redesign problem into interconnected components, which can each share common interfaces while preserving relationships between requirements and functionalities. Each component, such as fleet specification, route design, assignment of students to trips, and equity evaluation, is modeled as a monotone relation between resource inputs (including budget, available vehicles, allowable maximum ride times) and achievable functionalities (coverage, travel time distributions, equity indices). This allows one to represent both existing network designs and possible alternatives in a common framework, making it possible to determine whether the present system is dominated by any feasible configuration under multiple criteria.
 
-Using this general framework, I then model a case-study of \gls{fps} school buses as a \gls{vrp} with a single bus depot, fixed pickup locations, and assigned drop-offs. I treat the underlying road network and stop set as fixed, since infrastructure changes are limited in the short to medium term, and add temporal constraints for student passengers to cap student in-vehicle times and ensure arrival before school start times.
+Using this general framework, I then model a case study of \gls{fps} school buses as a \gls{vrp} with a single bus depot, fixed pickup locations, and assigned drop-offs. I treat the underlying road network and stop set as fixed, since infrastructure changes are limited in the short to medium term, and add temporal constraints for student passengers to cap student in-vehicle times and ensure arrival before school start times.
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.5\linewidth, alt={Grid-based toy street network showing optimized school bus routes. Colored route segments connect selected stops to schools and a depot, demonstrating that the routing formulation can generate feasible bus paths on a small artificial network.}]{figures/initial_test.png}
-    \caption{Initial test of routing in an arbitrary toy network.}
+    \includegraphics[width=0.5\linewidth, alt={Grid-based toy street network showing optimized school bus routes. Colored route segments connect selected stops to schools and a depot, demonstrating that the routing formulation can generate feasible bus paths on a small artificial network.}]{figures/initial_test.pdf}
+    \caption{Initial test of bus routing in a 10 by 10 toy network, using 3 schools of different types, 1 central depot, and 10 total bus stops. Each directed edge has a random weight assigned.}
     \label{fig:placeholder}
 \end{figure}
 
 The co-design composition enables a clear separation between physical and institutional subsystems while maintaining their properties. For example, a fleet component maps a set of buses B with capacities $C_b$, ranges $R_b$, and accessibility attributes $W_b$ to feasible routing capabilities. Meanwhile, a staffing component models the availability of monitors and drivers, and a policy component encodes equity goals such as sufficient coverage for particular demographic groups. These components are combined into a global design problem whose solution set can be projected onto different objective spaces like cost, coverage, and equity to generate explicit Pareto frontiers that planners and stakeholders can interrogate.
-
-\begin{figure}[!htbp]
-    \centering
-    \includegraphics[width=0.99\linewidth, alt={Co-design system diagram showing how routing service inputs, bus capacity, driver, fuel, maintenance, monitor, and BiRD algorithm parameters connect to outputs such as total cost, unserved students, stops used, emissions, and accessibility-related service metrics.}]{figures/codesign_diagram.pdf}
-    \caption{Co-design process diagram illustrating how different components interconnect}
-    \label{fig:codesign}
-\end{figure}
 
 \section{Data Sources and Preprocessing}
 
@@ -31,9 +24,16 @@ Demand is represented as a set of individuals $M$, each associated with a pickup
 
 I also incorporate student-level flags indicating the need for additional on-board support and wheelchair accessibility. A binary flag $f_m$ identifies students in set $F\subseteq M$ who require a monitor, and a subset $W\subseteq F$ identifies those who require a wheelchair-accessible bus. These attributes are derived from the district's special education transportation records and are used to enforce monitor and vehicle constraints at the routing stage. 
 
-\section{\Glsentryfull{milp} Formulation}
+\section{Co-Design and \Glsentryfull{milp} Formulation}
 
-\autoref{fig:codesign} summarizes the resulting co-design composition, with each box representing an \gls{mdpi} (monitor, bus capacity, driver, fuel, maintenance, and routing service) connected via shared functionalities and resources. At the core of this framework is a decomposed \gls{milp} formulation that encodes the routing and assignment decisions. This can be tailored to a specific use case, and below is a formulation for the specific Framingham case study. The full formulation below is presented as background motivation; due to computational intensity, the implementation that follows uses a modified \gls{bird} backend from \textcite{delarueOptimizing}, referred to here as \gls{bra}, with two modes: \verb!scenario! and \verb!lbh!.
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.99\linewidth, alt={Co-design system diagram showing how routing service inputs, bus capacity, driver, fuel, maintenance, monitor, and \glsentryfull{BiRD} algorithm parameters connect to outputs such as total cost, unserved students, stops used, emissions, and accessibility-related service metrics.}]{figures/codesign_diagram_simple.pdf}
+    \caption{Simplified co-design diagram, illustrating how different component functionalities and requirements interact.}
+    \label{fig:codesign}
+\end{figure}
+
+\autoref{fig:codesign} summarizes the resulting co-design composition, with each box representing an \gls{mdpi} (monitor, bus capacity, driver, fuel, maintenance, and routing service) connected via shared functionalities and resources. At the core of this framework is a decomposed \gls{milp} formulation that encodes the routing and assignment decisions. This can be tailored to a specific use case, and below is a formulation for the specific Framingham case study. The full, original formulation below is presented as background motivation; due to computational intensity, the implementation that follows uses a modified \gls{bird} backend from \textcite{delarueOptimizing}, referred to here as \gls{bra}, with two modes: \verb!scenario! and \verb!lbh!.
 
 \subsection{Initial Formulation}
 \label{sec:original_milp}
@@ -48,18 +48,18 @@ The objective function minimizes a weighted sum of total distance traveled acros
 
 These constraints together enforce student assignment coverage, tour feasibility, time consistency, max time limits, capacity adherence, and monitor and wheelchair-accessibility requirements. Assignment constraints ensure each student is assigned at most once and that the aggregate number of assigned students meets the desired coverage $\phi\left\vert M\right\vert$. Flow-conservation and depot/school connection constraints also ensure that each round is a valid tour.
 
-Time-linking constraints guarantee that arrival times along arcs respect travel plus dwell times and that buses depart schools for the next round only after boarding/alighting. Latest-arrival constraints require that the arrival time at each school $s$, plus the relevant alighting dwell, does not exceed the latest allowable arrival $\ell_s\coloneq h_s-\delta_s$, where $h_s$ is the bell time (represented as minutes from midnight) and $\delta_s$ is a required slack. To control individual student experiences, precedence constraints enforce that a student’s school is visited after their pickup stop by at least a small separation $\epsilon$, and ride-time constraints require that the difference $T_{b,q,s_m}-T_{b,q,p_m}$ does not exceed the maximum in-vehicle time $H_{\mathrm{ride}}$  (set to 60 minutes) when $a_{m,b,q}=1$.
+Time-linking constraints guarantee that arrival times along arcs respect travel plus dwell times and that buses depart schools for the next round only after boarding/alighting. Latest-arrival constraints require that the arrival time at each school $s$, plus the relevant alighting dwell, does not exceed the latest allowable arrival $\ell_s\coloneq h_s-\delta_s$, where $h_s$ is the bell time (represented as minutes from midnight) and $\delta_s$ is a required slack. To control individual student experiences, precedence constraints enforce that a student’s school is visited after their pickup stop by at least a small separation $\epsilon$, and ride-time constraints require that the difference $T_{b,q,s_m}-T_{b,q,p_m}$ does not exceed an arbitrary maximum in-vehicle time $H_{\mathrm{ride}}$ when $a_{m,b,q}=1$.
 
 Capacity dynamics are handled by linking the load variables $L_{b,q,i}$ across arcs by using the number of students boarding or alighting at each node and bounding the load by the actual capacity $C_b\sum_{\tau}\kappa_\tau y_{b,q,\tau}$. Additional constraints set loads to zero at depots and school start-copy nodes to reset tours, as well as ensure that ending a round at a school implies an empty bus at that school (if required). Monitor-related constraints couple the presence of flagged students $m\in F$ with the binary variable $r_b^{\mathrm{mon}}$, making sure that any bus carrying a flagged student in any round also carries a monitor, and also that wheelchair-using students $m\in W$ can only be assigned to buses with $W_b=1$.
 
 \begin{figure}[!htbp]
     \centering
     \begin{subfigure}{0.495\textwidth}
-        \includegraphics[width=0.99\textwidth, alt={Map of initial optimized bus routes for students within one kilometer of a school, without trip chaining. Red route segments show the selected bus path over the Framingham road network.}]{figures/no_chaining_routes.png}
+        \includegraphics[width=0.99\textwidth, alt={Map of initial optimized bus routes for students within one kilometer of a school, without trip chaining. Red route segments show the selected bus path over the Framingham road network.}]{figures/no_chaining_routes.pdf}
         \subcaption{All students within 1 km of a school (no chaining)}
     \end{subfigure}
     \begin{subfigure}{0.495\textwidth}
-        \includegraphics[width=0.99\textwidth, alt={Map of initial optimized bus routes for students within one kilometer of two schools, with trip chaining. Red route segments show the selected bus path over the Framingham road network.}]{figures/chaining_routes.png}
+        \includegraphics[width=0.99\textwidth, alt={Map of initial optimized bus routes for students within one kilometer of two schools, with trip chaining. Red route segments show the selected bus path over the Framingham road network.}]{figures/chaining_routes.pdf}
         \subcaption{All students within 1 km of 2 schools (chaining)}
     \end{subfigure}
     \caption{Initial test routes using the original formulation}
@@ -82,8 +82,8 @@ These two \gls{bird} modes expose a useful quality-runtime tradeoff. The \verb!s
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.99\linewidth, alt={Three side-by-side Pareto-front scatter plots comparing \glsentryfull{lbh} and Scenario \glsentryfull{bird} outputs on testing data. The plots show tradeoffs between unassigned students and cost, unassigned students and annual emissions, and stops used and cost. Blue points represent \glsentryfull{lbh} solutions, red points represent scenario solutions, and the black line marks the Pareto frontier.}]{figures/routing_bird_mcdp_pareto_routing_simple_caps.pdf}
-    \caption{Pareto fronts using \gls{bird} with testing data.}
+    \includegraphics[width=0.99\linewidth, alt={Three side-by-side Pareto-front scatter plots comparing \glsentryfull{lbh} and Scenario \glsentryfull{bird} outputs on catalog data. The plots show tradeoffs between unassigned students and cost, unassigned students and annual emissions, and stops used and cost. Blue points represent \glsentryfull{lbh} solutions, red points represent scenario solutions, and the black line marks the Pareto frontier.}]{figures/routing_bird_mcdp_pareto_all.pdf}
+    \caption{Pareto fronts using \gls{bird} with all possible different configurations.}
     \label{fig:bird_simple}
 \end{figure}
 
@@ -93,7 +93,7 @@ I implement the framework described for the Framingham, Massachusetts school bus
 
 \begin{figure}[!htbp]
     \centering
-    \includegraphics[width=0.5\linewidth, alt={Map of the Framingham road network used to construct travel arcs. White road segments appear on a dark background, with a red boundary outlining the study area.}]{figures/framingham.png}
+    \includegraphics[width=0.5\linewidth, alt={Map of the Framingham road network used to construct travel arcs. White road segments appear on a dark background, with a red boundary outlining the study area.}]{figures/framingham.pdf}
     \caption{Current Framingham road network used to create travel arcs}
     \label{fig:framingham}
 \end{figure}
@@ -110,8 +110,8 @@ Although this thesis focuses on a case study for school bus operations in Framin
 
 In an urban transit context, several modeling elements change, while the overall structure stays intact. To begin, the demand representation would typically shift from discrete student assignments to a continuous or aggregated demand model, such as \gls{od} matrices, time-of-day boarding patterns, or stop-level ridership patterns. Rather than assigning individual students $m\in M$ to specific trips, the framework should be modified to embed demand as flows along corridors or between urban activity centers, which can then feed into \gls{mdpi} components that evaluate coverage and travel time distributions for different rider populations.
 
-In addition, stop placement and spacing become explicit design variables, rather than fixed inputs. In our school bus case study, pickup locations are predetermined by student addresses and district policies, and the road network is treated as a base on which to route vehicles. For cities, the co-design problem can include a stop-sitting component that trades off walk access distance, stop spacing, and in-vehicle travel time. This would allow the framework to represent both ``coverage-orientation'' and ``frequency-oriented'' network designs, all with the same formalism.
+In addition, stop placement and spacing become explicit design variables, rather than fixed inputs. In this school bus case study, pickup locations are predetermined by student addresses and district policies, and the road network is treated as a base on which to route vehicles. For cities, the co-design problem can include a stop-setting component that trades off walk access distance, stop spacing, and in-vehicle travel time. This would allow the framework to represent both ``coverage-orientation'' and ``frequency-oriented'' network designs, all with the same formalism.
 
 Furthermore, the temporal structure must expand from single-trip or peak-period service to all-day (and potentially weekend) operations. Instead of enforcing arrival windows around school start and end times, an urban setting would require time-dependent headways, service distribution, and coordination between routes at transfer points. These considerations can be captured by extending the temporal \gls{mdpi} components to include time-of-day frequency decisions and reliability metrics, composing them with fleet and crew scheduling components to model multi-shift operations.
 
-Equity objectives must also shift, from school-specific ride times and eligibility thresholds to accessibility and service quality across diverse neighborhoods and rider groups. The same co-design framework can incorporate equity metrics based on job accessibility, access to healthcare and other key destinations, as well as by implementing constraints on headways, crowding, or travel time disparities between demographic or income groups. In this way, the framework provides a unified and formal language for representing a wide variety of transportation planning problems, the main differences residing in how demand, stop placements, temporal patterns, and equity indicators are instantiated and resolved within the shared structure.
+Equity objectives must also shift, from school-specific ride times and eligibility thresholds to accessibility and service quality across diverse neighborhoods and rider groups. The same co-design framework can incorporate equity metrics based on job accessibility, access to healthcare and other key destinations, as well as by implementing constraints on headways, crowding, or travel time disparities between demographic or income groups. In this way, the framework is highly adaptable, providing a unified and formal language for representing a wide variety of transportation planning problems, the main differences residing in how demand, stop placements, temporal patterns, and equity indicators are instantiated and resolved within the shared structure.

@@ -13,7 +13,7 @@
 
 %%%%%%%%%  Documentclass and options  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\documentclass[fontset=termes-stix2]{mitthesis}
+\documentclass[fontset=termes-stix2,twosided]{mitthesis}
 
 %%%%%%%%%  Packages used  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -147,12 +147,15 @@
 
 %%%%%%%%%%%% Content that you need to write follows! %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\includeonly{acknowledgments,intro,litreview,methods,results,conclusions,appendixa,appendixb}
+\includeonly{acknowledgments,intro,litreview,methods,results,conclusions,math,stakeholder}
 %   for usage of includeonly, see https://latexref.xyz/_005cinclude-_0026-_005cincludeonly.html
 
 % ACRONYMS
 
 \input{acronyms}
+
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
 
 %%%%%%%%%%%%%%  End preamble %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -249,8 +252,8 @@
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\include{appendixa}
-\include{appendixb}
+\include{math}
+\include{stakeholder}
 \printglossary[type=\acronymtype, title=List of Acronyms, toctitle=List of Acronyms]
 
 

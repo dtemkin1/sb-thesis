@@ -1,0 +1,30 @@
+\chapter{Stakeholder Engagement}
+\label{ap:stakeholder}
+
+To ground the case study in a local context and operational reality, I engaged with staff from \gls{fps} over several months through email correspondence, an in-person stakeholder meeting, and follow-up information requests. The engagement began with an introductory email from the MIT team outlining the project's objectives: to explore whether \gls{fps} bus operations could be improved using co-design-based optimization tools, and to understand the district's existing routing practices and constraints. \Gls{fps} staff confirmed that they were interested in exploring such improvements and indicated what types of data might be available, subject to an appropriate privacy agreement. This includes student assignments, routing plans, fleet characteristics, and \gls{gps} traces.
+
+An in-person stakeholder meeting was held on January 8, 2026, at the \gls{fps} administrative offices, attended by \gls{fps} leadership, as well as a local elected official and the MIT team. During the meeting, \gls{fps} officials clarified key aspects of their current operations including:
+
+\begin{itemize}
+    \item School choice is prevalent in Framingham.
+    \item Students more than 2 miles from their chosen school are entitled to free transportation under Massachusetts law, and those living between 1 and 2 miles can sign up for transportation with an associated fee.
+    \item Buses are centrally managed by the district, but typically operate on school-specific runs.
+    \item Students with disabilities often ride on regular buses, but may require staff monitors or wheelchair-accessible vehicles in some cases.
+\end{itemize}
+
+The district also explained that they are considering moving from an opt-in to an opt-out transportation model, in which all students are enrolled for bus service by default (with the option to decline). This meeting also established that \gls{fps} already uses a routing platform, but relies heavily on manual adjustments, and that there is no operational integration with the regional transit provider, the \gls{mwrta}.
+
+Following the meeting, \gls{fps} officials circulated an email summarizing the agreed work plan. \Gls{fps} committed to pursuing a student privacy agreement, sharing relevant student-level and operational data, and working with their vendor to provide \Gls{gps} tracking information where possible. The MIT team agreed to conduct exploratory data analysis and report back on data quality, preliminary findings, and whether additional meetings would be needed. Stakeholders also expressed interest in exploring potential links between bus access and truancy or tardiness, suggesting that future analyses might examine correlation between service availability and attendance outcomes if suitable data can be gathered.
+
+As the analysis progressed, I sent a follow-up email to \gls{fps} with more detailed questions about their operational preferences and constraints, which were incorporated into the findings. \Gls{fps} clarified that:
+
+\begin{itemize}
+    \item They would prefer to avoid overcrowding by not routinely seating two or three students per seat.
+    \item They employ a three-tiered system, in which a single bus may serve high school, then middle school, then elementary school in sequence.
+    \item Only a small subset of buses are equipped for wheelchair access, which requires careful assignments of students with mobility needs.
+    \item Rather than assigning a per-mile cost for student pickups, they currently think in terms of a per-daily bus lease cost in the low hundreds of dollars. However, capital costs based on bus procurement numbers were later provided for use in our analysis.
+\end{itemize}
+
+These exchanges directly informed the modeling choices in the Framingham case study, including the representation of trip chaining, capacity and monitor constraints, and the cost structures used in the Pareto-front analyses.
+
+This engagement process ensures that the case study reflects \gls{fps}'s institutional priorities and real-world constraints, rather than relying on abstract optimization assumptions. It also highlighted several directions for future collaboration, including the need for more complete accessibility and attendance data, calibrated travel-time estimates from \gls{gps} traces, and potential pilot testing of selected routing scenarios (in partnership with district staff and families).
