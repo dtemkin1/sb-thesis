@@ -1,4 +1,30 @@
 \chapter{\Glsentryfull{mcdp} Reprensentation}
+\label{ap:mcdpl}
+
+\newtcolorbox{filebox}[1]{
+    colback=white,
+    colframe=gray!30,
+    fonttitle=\bfseries\sffamily,
+    coltitle=black,
+    title={#1},
+    enhanced,
+    attach boxed title to top left={yshift=-2mm, xshift=2mm},
+    boxed title style={colback=gray!10},
+    breakable
+}
+
+\newcommand{\mcdpoutput}[1]{\begin{filebox}{#1}\verbatiminput{mcdpl/#1}\end{filebox}}
 
 The following describes the \gls{mcdp} used in this thesis. This is done in MCDPL, a formal modeling language for the description of \glspl{mcdp}, which is described in \textcite{censi2016Mathematical}.
 
+{
+\scriptsize
+\mcdpoutput{bird\_arrival\_window.mcdp\_poset}
+\mcdpoutput{routing.mcdp}
+% \begin{filebox}{mcdpl/bird_arrival_window.mcdp_poset}
+%     \verbatiminput{mcdpl/bird\_arrival\_window.mcdp_poset}
+% \end{filebox}
+% \begin{filebox}{routing.mcdp}
+%     \verbatiminput{mcdpl/routing.mcdp}
+% \end{filebox}
+}
