@@ -19,6 +19,7 @@
 
 %% Package for code listing
 % \usepackage{listings}
+\usepackage{verbatim}
 
 %% Table related packages  
 \usepackage{booktabs}% publication quality tables
@@ -32,9 +33,8 @@
 \usepackage[nopatch=footnote]{microtype}
 
 %% Load this if using the two-column nomenclature format, \begin{nomenclature*}
-% \usepackage{multicol}
+\usepackage{multicol}
 
-\usepackage[most]{tcolorbox}
 \usepackage{tabularx}
 
 
@@ -147,7 +147,7 @@
 
 %%%%%%%%%%%% Content that you need to write follows! %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\includeonly{acknowledgments,intro,litreview,methods,results,conclusions,math,stakeholder}
+\includeonly{acknowledgments,intro,litreview,methods,results,discussion,conclusions,stakeholder,math,mcdpl}
 %   for usage of includeonly, see https://latexref.xyz/_005cinclude-_0026-_005cincludeonly.html
 
 % ACRONYMS
@@ -246,14 +246,16 @@
 \include{litreview}
 \include{methods}
 \include{results}
+\include{discussion}
 \include{conclusions}
 
 
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\include{math}
 \include{stakeholder}
+\include{math}
+\include{mcdpl}
 \printglossary[type=\acronymtype, title=List of Acronyms, toctitle=List of Acronyms]
 
 

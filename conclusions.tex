@@ -1,4 +1,4 @@
-\chapter{Conclusions and Limitations}
+\chapter{Conclusions}
 \label{ch:conclusions}
 
 \begin{table}[!htbp]
@@ -12,27 +12,27 @@
 \midrule
 Estimated travel times &
 Route costs and feasibility may differ from real bus operations, especially during congestion and school arrival windows. &
-Calibrate travel times with bus GPS traces. \\
+Calibrate travel times with bus GPS traces. \\ \midrule
 
 Single demand snapshot &
 Results may not capture absences, address changes, program changes, or midyear enrollment shifts. &
-Test multiple student-assignment snapshots. \\
+Test multiple student-assignment snapshots. \\ \midrule
 
 Incomplete operational constraints &
 Routes may omit practical details such as driver preferences, depot procedures, dispatch flexibility, and special-case handling. &
-Validate routes with district operators and encode missing constraints. \\
+Validate routes with district operators and encode missing constraints. \\ \midrule
 
 Limited uncertainty modeling &
 Scenario results do not fully capture stochastic delays, disruptions, or day-to-day travel-time variability. &
-Evaluate routes under sampled traffic and delay scenarios. \\
+Evaluate routes under sampled traffic and delay scenarios. \\ \midrule
 
 Case-study scale only &
 Runtime and solution quality may differ for larger districts, finer networks, or more scenario samples. &
-Benchmark on larger synthetic and real instances. \\
+Benchmark on larger synthetic and real instances. \\ \midrule
 
 Indirect equity measures &
 Optimization outputs may not fully capture reliability, walking burden, household constraints, or lived experience. &
-Add stakeholder-defined equity metrics and thresholds. \\
+Add stakeholder-defined equity metrics and thresholds. \\ \midrule
 
 No field deployment &
 Generated routes have not been tested with drivers, families, or dispatchers in live service. &
@@ -47,7 +47,7 @@ The all-students experiments show that expanding transportation access creates a
 
 These results also illustrate the value of the Pareto-front framing. Rather than producing a single ``best'' routing plan, the co-design formulation can show the frontier between competing objectives. This is useful for planning because the preferred solution may depend on institutional priorities: one configuration may minimize buses, another maximizes student coverage, and another could reduce long rides for vulnerable groups. By placing the current \gls{fps} routing plan on the same frontier as generated alternatives, the framework allows planners to distinguish between tradeoffs that are structurally unavoidable and inefficiencies that can be improved through redesign.
 
-Equity considerations are central to this interpretation. The preliminary results show that students from non-English-speaking households, non-car-owning households, and students with disabilities all experience lower estimated mean travel times under \gls{bra} than under the current routing baseline. This suggests that efficiency improvements do not come at the expense of vulnerable groups. However, the current experiments evaluate equity primarily after routing, rather than embedding equity constraints directly in the optimization objective. Future versions should incorporate explicit constraints or penalties for unequal service outcomes, such as subgroup-specific maximum ride times, minimum coverage rates, or limits on the spatial concentration of unassigned students. Additionally, inspired by the work of \textcite{vanweeEvaluatingTransportEquity2021}, promising outcomes could be gained by identifying ways of indexing inequity levels and incorporating them into \gls{bra}.
+Equity considerations are central to this interpretation. The results show that students from non-English-speaking households, non-car-owning households, and students with disabilities all experience lower estimated mean travel times under \gls{bra} than under the current routing baseline. This suggests that efficiency improvements do not come at the expense of vulnerable groups. However, the current experiments evaluate equity primarily after routing, rather than embedding equity constraints directly in the optimization objective. Future versions should incorporate explicit constraints or penalties for unequal service outcomes, such as subgroup-specific maximum ride times, minimum coverage rates, or limits on the spatial concentration of unassigned students. Additionally, inspired by the work of \textcite{vanweeEvaluatingTransportEquity2021}, promising outcomes could be gained by identifying ways of indexing inequity levels and incorporating them into \gls{bra}.
 
 The results should therefore be interpreted as planning evidence rather than deployment-ready schedules. The current model assumes a constant travel speed, does not include intersection delay or time-varying congestion, and lacks complete student-level linkage between home addresses, current stops, bus assignments, disability status, and wheelchair-accessibility requirements. These limitations affect the precision of individual travel-time estimates and may change which route chains are feasible in practice. Before implementation, the model should be recalibrated using district-validated stop assignments, complete accessibility data, and travel-time estimates derived from \gls{avl} data or a time-dependent routing engine.
 
