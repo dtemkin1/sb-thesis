@@ -3,7 +3,7 @@
 
 I use the monotone theory of co-design to split the bus network redesign problem into interconnected components, which can each share common interfaces while preserving relationships between requirements and functionalities. Each component, such as fleet specification, route design, assignment of students to trips, and equity evaluation, is modeled as a monotone relation between resource inputs (including budget, available vehicles, allowable maximum ride times) and achievable functionalities (coverage, travel time distributions, equity indices). This allows one to represent both existing network designs and possible alternatives in a common framework, making it possible to determine whether the present system is dominated by any feasible configuration under multiple criteria.
 
-Using this general framework, I then model a case study of \gls{fps} school buses as a \gls{vrp} with a single bus depot, fixed pickup locations, and assigned drop-offs. I treat the underlying road network and stop set as fixed, since infrastructure changes are limited in the short to medium term, and add temporal constraints for student passengers to cap student in-vehicle times and ensure arrival before school start times.
+Using this general framework, I then model a case study of \gls{fps} school buses as a \gls{cvrp} with a single bus depot, fixed pickup locations, and assigned drop-offs. I treat the underlying road network and stop set as fixed, since infrastructure changes are limited in the short to medium term, and add temporal constraints for student passengers to cap student in-vehicle times and ensure arrival before school start times.
 
 \begin{figure}[!htbp]
     \centering
