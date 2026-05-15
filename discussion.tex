@@ -1,14 +1,64 @@
 \chapter{Discussion and Limitations}
+\label{ch:discussion}
 
-These findings are directional rather than final, since the analysis does not yet account for intersection delay, time-varying congestion, or all student-specific service requirements (e.g. wheelchair students due to missing data). Nonetheless, they establish a clear proof of concept: better route design can potentially allow \gls{fps} to serve the same students with fewer buses, shorter rides, and more consistent travel times across demographic groups. Additionally, they demonstrate how \gls{fps} can substantially change their bus routing to serve a greater number of students while improving average travel-time outcomes under the modeled assumptions.
+\begin{table}[!htbp]
+\centering
+\caption{Limitations, effects on results, and recommended next steps.}
+\label{tab:limitations}
+\small
+\begin{tabularx}{\textwidth}{p{0.20\textwidth} X p{0.25\textwidth}}
+\toprule
+\textbf{Limitation} & \textbf{Effect on Results} & \textbf{Next Step} \\
+\midrule
+Estimated travel times &
+Route costs and feasibility may differ from real bus operations, especially during congestion and school arrival windows. &
+Calibrate travel times with bus GPS traces. \\ \midrule
 
-To refine these results further, future work will require \gls{fps} to provide a unified student-level dataset linking each student's home location, school, grade, transportation eligibility, current stop assignment, bus assignment, disability status, wheelchair-accessibility requirement where applicable, and any district-specific service constraints. Additionally, I would like to confirm whether routing should use district-approved stops or allow \gls{bra} to generate new stop assignments, and also whether demographic equity constraints should be embedded directly into the \gls{bra} optimization using a strategy similar to \textcite{paviaDesigningEquitableTransit2023}.
+Single demand snapshot &
+Results may not capture absences, address changes, program changes, or midyear enrollment shifts. &
+Test multiple student-assignment snapshots. \\ \midrule
 
-As this work is continued, one should define service standards that should govern implementation, including maximum ride time, maximum walk distance to stops, arrival windows, and treatment of students with disabilities and accessibility needs. Future work should replace constant-speed assumptions with calibrated travel times that reflect road type, congestion, and school-period traffic conditions.
+Incomplete operational constraints &
+Routes may omit practical details such as driver preferences, depot procedures, dispatch flexibility, and special-case handling. &
+Validate routes with district operators and encode missing constraints. \\ \midrule
+
+Limited uncertainty modeling &
+Scenario results do not fully capture stochastic delays, disruptions, or day-to-day travel-time variability. &
+Evaluate routes under sampled traffic and delay scenarios. \\ \midrule
+
+Case-study scale only &
+Runtime and solution quality may differ for larger districts, finer networks, or more scenario samples. &
+Benchmark on larger synthetic and real instances. \\ \midrule
+
+Indirect equity measures &
+Optimization outputs may not fully capture reliability, walking burden, household constraints, or lived experience. &
+Add stakeholder-defined equity metrics and thresholds. \\ \midrule
+
+No field deployment &
+Generated routes have not been tested with drivers, families, or dispatchers in live service. &
+Pilot or shadow-test selected routes before adoption. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\autoref{tab:limitations} summarizes the principal limitations of this study and recommended next steps. With these caveats, these findings are directional rather than final, since the analysis does not yet account for intersection delay, time-varying congestion, or all student-specific service requirements (e.g. wheelchair students due to missing data). Nonetheless, they establish a clear proof of concept: better route design can potentially allow \gls{fps} to serve the same students with fewer buses, shorter rides, and more consistent travel times across demographic groups. Additionally, they demonstrate how \gls{fps} can substantially change their bus routing to serve a greater number of students while improving average travel-time outcomes under the modeled assumptions.
+
+\begin{figure}[!htbp]
+    \centering
+    \includegraphics[width=0.99\textwidth, alt={Histogram of implied planned bus speeds between consecutive stops in both the current schedule and \glsentrylong{bird} assigned student solution, measured in miles per hour. Most stop-to-stop segments for the current schedule fall between about 5 and 20 miles per hour, with the highest concentration around 10 to 15 miles per hour and a long right tail extending toward 50 miles per hour, indicating substantial variation in planned travel speeds. Conversely, the majority of speeds in the \glsentrylong{bird} student solution fall between 20 and 40 miles per hour, with the highest concentration around 30 miles per hour.}]{figures/speed_distribution_comparison.pdf}
+    \caption{Distribution of implied planned speeds between consecutive stops in the existing route data and \gls{bird} solution data for assigned students. Speeds are calculated from planned stop-to-stop movements and show substantial variation across route segments.}
+    \label{fig:planned-speed-distribution}
+\end{figure}
+
+Although the \gls{bra} experiments use a constant-speed assumption for travel-time estimation, the existing route data suggest that planned bus speeds vary substantially across stop-to-stop segments. \autoref{fig:planned-speed-distribution} shows that most implied planned speeds are well below free-flow arterial speeds, with a long right tail of faster segments. This reinforces that the results should be interpreted as comparative planning estimates rather than deployment-ready schedules, and that future work should calibrate travel times using \gls{avl} traces or a time-dependent routing engine.
+
+To refine these results further, future work will require \gls{fps} to provide a unified student-level dataset linking each student's home location, school, grade, transportation eligibility, current stop assignment, bus assignment, disability status, wheelchair-accessibility requirement where applicable, and any district-specific service constraints. Additionally, future work should confirm whether routing should use district-approved stops or allow \gls{bra} to generate new stop assignments, and also whether demographic equity constraints should be embedded directly into the \gls{bra} optimization using a strategy similar to \textcite{paviaDesigningEquitableTransit2023}.
+
+As this work is continued, future work should define service standards that should govern implementation, including maximum ride time, maximum walk distance to stops, arrival windows, and treatment of students with disabilities and accessibility needs. Future work should replace constant-speed assumptions with calibrated travel times that reflect road type, congestion, and school-period traffic conditions.
 
 \section{Extension to Urban Bus Network Redesigns}
 
-This thesis focuses on a case study for school bus operations in Framingham, Massachusetts, but the underlying co-design technique can be generalized to urban bus networks more broadly. The same monotone compositional reasoning of physical, operational, and policy subsystems applies when planners restructure bus routes, frequencies, and stop patterns across all-day service.
+This thesis focuses on a case study for school bus operations in Framingham, Massachusetts, but the underlying co-design technique and findings can be generalized to urban bus networks more broadly. The same monotone compositional reasoning of physical, operational, and policy subsystems applies when planners restructure bus routes, frequencies, and stop patterns across all-day service.
 
 In an urban transit context, several modeling elements change, while the overall structure stays intact. To begin, the demand representation would shift from discrete student assignments to a model of passenger demand, such as \gls{od} matrices, time-of-day boarding patterns, or stop-level ridership patterns. Rather than assigning individual students $m\in\mathcal{M}$ to specific trips, one should embed demand as flows along corridors or between urban activity centers, which can then feed into \gls{mdpi} components that evaluate coverage and travel time distributions for different rider populations.
 
