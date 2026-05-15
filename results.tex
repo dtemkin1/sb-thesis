@@ -28,7 +28,8 @@ The current assignment therefore reflects both operational routing decisions and
 Additionally, Census-based demographic information was estimated by determining the corresponding block-group for different student addresses, then randomly sampling based on the percentage returned from 2020--2024 \gls{acs} 5-year estimates.
 
 \begin{table}[!htbp]
-    \centering
+    \centering{
+    \tagpdfsetup{table/header-rows={1}}
     \begin{tabular}{@{}lll@{}}
     \toprule
         Category & Quantity & Avg Dist. to School [mi] \\ \midrule
@@ -42,6 +43,7 @@ Additionally, Census-based demographic information was estimated by determining 
         Students with disabilities & 1096 & 2.49 \\ 
         \bottomrule
     \end{tabular}
+    }
     \caption{\gls{fps} student demographics and average home-to-school distance by student group, reported in miles. Categories are not mutually exclusive; a student may belong to multiple rows.}
     \label{tab:demographics}
 \end{table}
@@ -51,7 +53,8 @@ Additionally, Census-based demographic information was estimated by determining 
 The preliminary results indicate that \gls{bra} can improve \gls{fps}'s bus operations while preserving student coverage. Under the tested configuration, the algorithm serves the same 4,780 currently assigned students using 48 buses instead of 51, reducing deployed buses by 3, or approximately 5.9\%. This suggests that the existing network contains meaningful routing inefficiency that can be addressed through algorithmic reassignment and multi-school bus utilization. The core operational advantage of \gls{bra} is that it allows each bus to complete multiple trips across schools, while each trip remains structured around a specific grade and school assignment. For this preliminary test, I use conservative estimates and assume buses travel at an average speed of 30 miles per hour, require 30 seconds for student boarding, 1 minute for boarding students with disabilities, arrive between 10 minutes and 40 minutes before school bell time, and include a required 10-minute dwell time at the school as a buffer.
 
 \begin{table}[!htbp]
-    \centering
+    \centering{
+    \tagpdfsetup{table/header-rows={1,2}}
     \begin{tabular}{@{}lllllllll@{}}
         \toprule
         Category 
@@ -78,6 +81,7 @@ The preliminary results indicate that \gls{bra} can improve \gls{fps}'s bus oper
         & \multicolumn{4}{l}{48} \\
         \bottomrule
     \end{tabular}
+    }
     \caption{Estimated travel times in minutes for currently assigned riders under current routing versus the \gls{bra} configuration. Does not account for intersection delay, assumes constant bus speed.}
     \label{tab:travel_times}
 \end{table}
@@ -105,10 +109,11 @@ Vulnerable groups also see consistent improvements under the modeling assumption
 \gls{fps} is considering moving from an opt-in routing model to an opt-out model, where students are provided school bus service by default. Thus, I applied \gls{bra} with the current fleet constraints and existing stops and found that the current student population living over 1.5 miles\footnote{\gls{fps} is required under Massachusetts law to offer no-cost transportation for students living over 2 miles away. However, as of writing, \gls{fps} also offers bus transportation for students living between 1 and 2 miles away for an associated fee \cite{framinghampublicschoolsRider, framinghamschoolcommittee2022Student}.} from their school can be served using the existing fleet available to \gls{fps}. Conversely, all students in the district with the current bus fleet cannot be fully served with the assumed modeling and operational constraints, as shown in \autoref{tab:travel_times_all}. 
 
 \begin{table}[!htbp]
-    \centering
+    \centering{
+    \tagpdfsetup{table/header-rows={1,2}}
     \begin{tabular}{@{}lllllllll@{}}
         \toprule
-         Served & \multicolumn{4}{l}{\textbf{All Students $\geq$ 1.5 miles away}} & \multicolumn{4}{l}{\textbf{All students}} \\
+         Category & \multicolumn{4}{l}{\textbf{All Students $\geq$ 1.5 miles away}} & \multicolumn{4}{l}{\textbf{All students}} \\
          & Mean & StDev & Min & Max & Mean & StDev & Min & Max \\ \midrule
          All students 
          & 30.81 & 14.67 & 3.52 & 59.62 
@@ -128,6 +133,7 @@ Vulnerable groups also see consistent improvements under the modeling assumption
          Buses used & \multicolumn{4}{l}{62} & \multicolumn{4}{l}{78} \\
          \bottomrule
     \end{tabular}
+    }
     \caption{Estimated travel times of students in minutes with different routing configurations with the set of all students. Does not account for intersection delay, assumes constant bus speed.}
     \label{tab:travel_times_all}
 \end{table}
