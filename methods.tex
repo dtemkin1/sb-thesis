@@ -96,10 +96,10 @@ Capacity dynamics are handled by linking the load variables $L_{b,q,i}$ across a
 Monitor-related constraints couple the presence of flagged students $m\in\mathcal{F}$ with the binary variable $r_b^{\mathrm{mon}}$, making sure that any bus carrying a flagged student in any round also carries a monitor, and also that wheelchair-using students $m\in\mathcal{W}$ can only be assigned to buses with $W_b=1$.
 
 \[
-a_{m,b,a} \leq r_b^{\mathrm{mon}} \qquad \forall m\in\mathcal{F},\forall b\in\mathcal{B},\forall q\in\mathcal{Q}
+a_{m,b,q} \leq r_b^{\mathrm{mon}} \qquad \forall m\in\mathcal{F},\forall b\in\mathcal{B},\forall q\in\mathcal{Q}
 \]
 \[
-a_{m,b,a} \leq W_b \qquad \forall m\in\mathcal{W},\forall b\in\mathcal{B},\forall q\in\mathcal{Q}
+a_{m,b,q} \leq W_b \qquad \forall m\in\mathcal{W},\forall b\in\mathcal{B},\forall q\in\mathcal{Q}
 \]
 
 \begin{figure}[!htbp]
