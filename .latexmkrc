@@ -4,6 +4,7 @@ $postscript_mode = $dvi_mode = 0;
 
 # pdf name
 $jobname = 'temkin-dtemkin-sb-dusp-2026-thesis';
+@default_files = ( 'main.tex' );
 
 # glossaries
 add_cus_dep( 'acn', 'acr', 0, 'makeglossaries' );
