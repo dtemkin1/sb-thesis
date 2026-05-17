@@ -1,6 +1,6 @@
 # A Co-Design Framework for School Bus Network Redesign
 
-LaTeX source for Diego Temkin's S.B. thesis in the MIT Department of Urban Studies and Planning, *"A Co-Design Framework for School Bus Network Redesign: Applying Category Theory to Routing, Resources, and Equity"* (May 2026).
+LaTeX source for Diego Temkin's S.B. thesis in the MIT Department of Urban Studies and Planning, _"A Co-Design Framework for School Bus Network Redesign: Applying Category Theory to Routing, Resources, and Equity"_ (May 2026).
 
 ## Overview
 
@@ -12,7 +12,7 @@ This repository contains the LaTeX source, figures, bibliography, and the MCDPL 
 
 ## Repository structure
 
-```
+```text
 main.tex                LaTeX entry point (loads mitthesis class, frontmatter, chapters, appendices)
 abstract.tex            Thesis abstract
 acknowledgments.tex     Acknowledgments
@@ -39,15 +39,15 @@ mitthesis-style.css     CSS used when tagged-PDF/HTML output is enabled
 
 ## Prerequisites
 
-- A TeX Live 2025 (or newer) distribution providing `lualatex`, `latexmk`, `biber`, and `makeglossaries`. TeX Live 2025 is required for the tagged-PDF (PDF/UA-2, PDF/A-4F) output configured in `main.tex`.
-- The `mitthesis` document class (vendored here as `mitthesis.cls`), along with the standard packages it depends on (biblatex, microtype, booktabs, longtable, tcolorbox, multicol, tabularx, setspace, etc.).
-- Fonts in the `termes-stix2` set (the default selected in `main.tex`); other fontsets are available under `fontsets/`.
+- A TeX Live 2025 (or newer) distribution providing `lualatex`, `latexmk`, `biber`, and `makeglossaries`. TeX Live 2025 is required for the tagged-PDF (PDF/UA-2, PDF/A-4F) output configured in [`main.tex`](./main.tex).
+- The `mitthesis` document class (vendored here as [`mitthesis.cls`](./mitthesis.cls)), along with the standard packages it depends on (biblatex, microtype, booktabs, longtable, tcolorbox, multicol, tabularx, setspace, etc.).
+- Fonts in the `termes-stix2` set (the default selected in `main.tex`); other fontsets are available under [`fontsets/`](./fontsets/).
 
 No Python or other runtime is needed to build the PDF — only a working TeX distribution.
 
 ## Building the PDF
 
-The build is driven by `latexmk` using the configuration in `.latexmkrc`, which sets `lualatex` as the engine, fixes the output name, and registers a custom dependency to run `makeglossaries` for the acronym list.
+The build is driven by `latexmk` using the configuration in [`.latexmkrc`](./.latexmkrc), which sets `lualatex` as the engine, fixes the output name, and registers a custom dependency to run `makeglossaries` for the acronym list.
 
 ```bash
 latexmk main.tex
@@ -63,19 +63,13 @@ latexmk -C
 
 ### Reproducing via CI
 
-`.github/workflows/latex.yml` builds the document on every push using `xu-cheng/latex-action@v4` with `latexmk_use_lualatex: true`, and uploads the resulting PDF as a workflow artifact named `thesis`. Pulling that artifact from a successful run is the simplest way to reproduce the compiled document without installing TeX locally.
+[`.github/workflows/latex.yml`](./.github/workflows/latex.yml) builds the document on every push using `xu-cheng/latex-action@v4` with `latexmk_use_lualatex: true`, and uploads the resulting PDF as a workflow artifact named `thesis`. Pulling that artifact from a successful run is the simplest way to reproduce the compiled document without installing TeX locally.
 
 ## Co-design model (MCDPL)
 
-The `mcdpl/` directory contains the formal Monotone Co-Design Problem used in the thesis, written in MCDPL — the modeling language introduced by Censi (2016). Key files:
+The [`mcdpl/`](./mcdpl/) directory contains the formal Monotone Co-Design Problem used in the thesis, written in MCDPL — the modeling language introduced by Censi (2016).
 
-- `routing.mcdp`, `routing_service.mcdp`, `routing_policy.mcdp` — routing component and policy wrappers.
-- `fleet.mcdp`, `fleet_bus_count.mcdp` — fleet capacity and bus count.
-- `driver.mcdp`, `monitor.mcdp`, `fuel.mcdp`, `maintenance.mcdp`, `guidelines.mcdp` — supporting resources and constraints.
-- `bird_*.mcdp_poset` — posets parameterizing the BiRD/BRA algorithmic choices (arrival window, average speed, dwell, lambda, method, partial).
-- `routing_simple.mcdp_query.yaml` — example query used to generate Pareto fronts.
-
-Appendix C of the thesis describes how these files compose into the full co-design diagram (`figures/codesign_diagram.pdf`).
+Appendix C of the thesis describes how these files compose into the full co-design diagram ([`figures/codesign_diagram.pdf`](./figures/codesign_diagram.pdf)).
 
 ## Data and reproducibility caveats
 
@@ -91,15 +85,15 @@ The BRA solver and data ingestion pipeline live in [`dtemkin1/act4ed`](https://g
 
 If you reference this work:
 
-> Temkin, D. (2026). *A Co-Design Framework for School Bus Network Redesign: Applying Category Theory to Routing, Resources, and Equity.* S.B. thesis, Department of Urban Studies and Planning, Massachusetts Institute of Technology.
+> Temkin, D. (2026). _A Co-Design Framework for School Bus Network Redesign: Applying Category Theory to Routing, Resources, and Equity._ S.B. thesis, Department of Urban Studies and Planning, Massachusetts Institute of Technology.
 
 A persistent DSpace URL will be assigned by the MIT Libraries after submission.
 
 ## License
 
-The thesis content (text, figures, MCDPL models) is released under **CC BY-NC-ND 4.0**, as declared in `main.tex` via `\CClicense`. See <https://creativecommons.org/licenses/by-nc-nd/4.0/>.
+The thesis content (text, figures, MCDPL models) is released under **CC BY-NC-ND 4.0**, as declared in [`main.tex`](./main.tex) via `\CClicense` and in [LICENSE](./LICENSE). See <https://creativecommons.org/licenses/by-nc-nd/4.0/>.
 
-The bundled `mitthesis.cls` and associated template files are © John H. Lienhard V and distributed under the MIT-style license included at the top of `mitthesis.cls`; they are not covered by the CC BY-NC-ND license that applies to the thesis content.
+The bundled [`mitthesis.cls`](./mitthesis.cls) and associated template files are © John H. Lienhard V and distributed under the MIT-style license included at the top of [`mitthesis.cls`](./mitthesis.cls); they are not covered by the CC BY-NC-ND license that applies to the thesis content.
 
 ## Contact
 
