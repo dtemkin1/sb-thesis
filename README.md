@@ -91,7 +91,7 @@ A persistent DSpace URL will be assigned by the MIT Libraries after submission.
 
 ## License
 
-The thesis content (text, figures, MCDPL models) is released under **CC BY-NC-ND 4.0**, as declared in [`main.tex`](./main.tex) via `\CClicense` and in [LICENSE](./LICENSE). See <https://creativecommons.org/licenses/by-nc-nd/4.0/>.
+The thesis content (text, figures, MCDPL models) is released under **CC BY-NC-ND 4.0**, as declared in [`main.tex`](./main.tex) via `\CClicense` and in [`LICENSE`](./LICENSE). See <https://creativecommons.org/licenses/by-nc-nd/4.0/>.
 
 The bundled [`mitthesis.cls`](./mitthesis.cls) and associated template files are © John H. Lienhard V and distributed under the MIT-style license included at the top of [`mitthesis.cls`](./mitthesis.cls); they are not covered by the CC BY-NC-ND license that applies to the thesis content.
 
