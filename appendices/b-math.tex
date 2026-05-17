@@ -1,7 +1,7 @@
 \chapter{\Glsentryshort{milp} Representation of \Glsentryshort{bra} Routing Modes}
 \label{ap:math}
 
-BRA exposes two routing modes: a scenario-based candidate-selection model and an \gls{lbh} mode. The scenario mode is naturally represented as a \gls{milp} over a generated set of candidate routes. The \gls{lbh} mode is implemented as a constructive insertion heuristic, but it can be interpreted as a greedy approximation to a related bus-itinerary assignment problem.
+\Gls{bra} exposes two routing modes: a scenario-based candidate-selection model and an \gls{lbh} mode. The scenario mode is naturally represented as a \gls{milp} over a generated set of candidate routes. The \gls{lbh} mode is implemented as a constructive insertion heuristic, but it can be interpreted as a greedy approximation to a related bus-itinerary assignment problem.
 
 \section{Scenario Candidate-Selection Formulation}
 
@@ -163,4 +163,4 @@ i\oplus g {\tagpdfsetup{table/tagging=presentation}\begin{tabular}{l} satisfies 
 \]
 where $\mathcal{U}$ is the set of students or stops currently uncovered. The algorithm repeats this insertion step until no feasible insertion remains, then proceeds to the next bus.
 
-In this sense, the scenario mode solves a global route-selection MILP over generated candidates, while \gls{lbh} greedily constructs a feasible solution to an implicit itinerary-selection problem without solving the full \gls{milp}.
+In this sense, the scenario mode solves a global route-selection \gls{milp} over generated candidates, while \gls{lbh} greedily constructs a feasible solution to an implicit itinerary-selection problem without solving the full \gls{milp}.
