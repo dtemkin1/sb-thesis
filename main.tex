@@ -148,7 +148,19 @@
 
 %%%%%%%%%%%% Content that you need to write follows! %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\includeonly{acknowledgments,intro,litreview,methods,results,discussion,conclusions,stakeholder,math,mcdpl}
+\includeonly{
+    acknowledgments,
+    chapters/1-intro,
+    chapters/2-litreview,
+    chapters/3-methods,
+    chapters/4-results,
+    chapters/5-discussion,
+    chapters/6-conclusions,
+    appendices/a-stakeholder,
+    appendices/b-math,
+    appendices/c-mcdpl,
+    appendices/d-acronyms
+}
 %   for usage of includeonly, see https://latexref.xyz/_005cinclude-_0026-_005cincludeonly.html
 
 % ACRONYMS
@@ -243,22 +255,21 @@
 
 \glsresetall
 
-\include{intro}% .tex extension is presumed
-\include{litreview}
-\include{methods}
-\include{results}
-\include{discussion}
-\include{conclusions}
+\include{chapters/1-intro}% .tex extension is presumed
+\include{chapters/2-litreview}
+\include{chapters/3-methods}
+\include{chapters/4-results}
+\include{chapters/5-discussion}
+\include{chapters/6-conclusions}
 
 
 %%% Appendicies of thesis  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \appendix
-\include{stakeholder}
-\include{math}
-\include{mcdpl}
-\printglossary[type=\acronymtype, title=List of Acronyms, toctitle=List of Acronyms]
-
+\include{appendices/a-stakeholder}
+\include{appendices/b-math}
+\include{appendices/c-mcdpl}
+\include{appendices/d-acronyms}
 
 
 %%% Bibliography (biblatex)  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
