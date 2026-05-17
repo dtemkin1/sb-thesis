@@ -1,0 +1,49 @@
+cff-version: 1.2.0
+message: "If you reference this thesis, please cite it using the metadata below."
+title: "A Co-Design Framework for School Bus Network Redesign: Applying Category Theory to Routing, Resources, and Equity"
+type: software
+authors:
+  - family-names: Temkin
+    given-names: Diego
+    email: dtemkin@alum.mit.edu
+    affiliation: "Department of Urban Studies and Planning, Massachusetts Institute of Technology"
+repository-code: "https://github.com/dtemkin1/sb-thesis"
+license: CC-BY-NC-ND-4.0
+abstract: >-
+  LaTeX source, MCDPL co-design model, figures, and bibliography for Diego
+  Temkin's S.B. thesis at the MIT Department of Urban Studies and Planning.
+  The thesis develops a co-design framework for bus network redesign using the
+  monotone theory of co-design from applied category theory, and demonstrates
+  it through a case study of Framingham Public Schools morning bus service
+  using a Bus Routing Algorithm (BRA) adapted from a Biobjective Routing
+  Decomposition (BiRD) backend.
+keywords:
+  - school bus routing
+  - bus network redesign
+  - monotone co-design
+  - applied category theory
+  - mixed-integer linear programming
+  - Biobjective Routing Decomposition
+  - Bus Routing Algorithm
+  - transportation equity
+  - transit planning
+  - Pareto fronts
+  - Framingham Public Schools
+  - accessibility
+  - student transportation
+preferred-citation:
+  type: thesis
+  title: "A Co-Design Framework for School Bus Network Redesign: Applying Category Theory to Routing, Resources, and Equity"
+  authors:
+    - family-names: Temkin
+      given-names: Diego
+      email: dtemkin@alum.mit.edu
+      affiliation: "Department of Urban Studies and Planning, Massachusetts Institute of Technology"
+  thesis-type: "S.B. thesis"
+  institution:
+    name: "Massachusetts Institute of Technology"
+    address: "Cambridge, MA, USA"
+  department: "Department of Urban Studies and Planning"
+  year: 2026
+  month: 5
+  license: CC-BY-NC-ND-4.0
